@@ -2,7 +2,7 @@ import React from 'react';
 
 const Integrations = () => {
     const integrations = [
-        { name: "Shopify", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Shopify_Logo.png", desc: "Installation en 1 clic via notre application native." },
+        { name: "Shopify", logo: "", desc: "Installation en 1 clic via notre application native." },
         { name: "WooCommerce", logo: "https://upload.wikimedia.org/wikipedia/commons/2/22/WooCommerce_logo.png", desc: "Plugin léger et parfaitement synchronisé." },
         { name: "RiseManager", logo: "/logo.png", desc: "L'intégration la plus profonde pour une gestion COD totale." },
         { name: "Sidi Yahia", logo: "#", desc: "Compatible avec les meilleures agences de livraison locales." },

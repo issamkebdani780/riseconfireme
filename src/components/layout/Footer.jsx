@@ -35,6 +35,8 @@ const Footer = () => {
                                 {[
                                     { name: 'Fonctionnalités', href: '#fonctionnalites' },
                                     { name: 'Tarifs', href: '#tarifs' },
+                                    { name: 'Blog', href: '#blog' },
+                                    { name: 'Espace Client', href: '#espace-client' },
                                     { name: 'Comment ça marche', href: '#comment-ca-marche' },
                                     { name: 'Intégrations', href: '#integrations' },
                                     { name: 'Témoignages', href: '#temoignages' }

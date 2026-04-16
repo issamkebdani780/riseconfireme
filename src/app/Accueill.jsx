@@ -13,7 +13,9 @@ import Ecosystem from '../components/sections/ecosysteme';
 import Integrations from '../components/sections/Integrations';
 import Pricing from '../components/sections/prix';
 import APropos from '../components/sections/A_propos';
+import DemandeDeDemonstration from '../components/sections/Demande_de_demonstration';
 import Blog from '../components/sections/Blog';
+import Espace_Client from '../components/sections/Espace_Client';
 import FAQ from '../components/sections/FAQ';
 import Contact from '../components/sections/Contact';
 import FinalCTA from '../components/sections/cta';
@@ -53,9 +55,12 @@ const Accueill = () => {
                 <Integrations />
                 <Pricing />
                 <APropos />
+                {/* <DemandeDeDemonstration /> */}
                 <Blog />
+                <Espace_Client />
                 <FAQ />
-                <Contact />
+                <DemandeDeDemonstration />
+                {/* <Contact /> */}
                 <FinalCTA />
             </main>
 

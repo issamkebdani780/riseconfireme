@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import DropDown from '../ui/DropDown';
 import Logo from '../ui/Logo';
 
@@ -58,7 +59,7 @@ const Header = () => {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6">
         <div
-          className={`container mx-auto px-4 lg:px-6 py-3 bg-white dark:bg-slate-900 rounded-[24px] border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300 flex items-center justify-between ${isScrolled ? 'shadow-md scale-[0.98]' : ''
+          className={`container mx-auto px-4 lg:px-6 py-3 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300 flex items-center justify-between ${isScrolled ? 'shadow-md scale-[0.98]' : ''
             }`}
         >
           {/* Logo */}
@@ -70,15 +71,13 @@ const Header = () => {
 
           {/* Navigation - Desktop */}
           <nav className="hidden lg:flex items-center gap-6">
-            <NavLink href="#">Accueil</NavLink>
+            <NavLink to="/">Accueil</NavLink>
             <DropDown title="Solutions" items={featuresItems} columns={2} />
             <DropDown title="Écosystème" items={ecoItems} columns={1} />
-            <NavLink href="#tarifs">Tarifs</NavLink>
-            <NavLink href="#faq">FAQ</NavLink>
-            <NavLink href="#contact">Contact</NavLink>
+            <NavLink to="/#tarifs">Tarifs</NavLink>
+            <NavLink to="/blog">Blog</NavLink>
+            <NavLink to="/espace-client">Espace Client</NavLink>
           </nav>
-
-          {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-4">
             <button 
               onClick={toggleTheme}
@@ -95,13 +94,13 @@ const Header = () => {
               )}
             </button>
 
-            <button className="hidden lg:block text-sm font-bold text-heading dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors border border-slate-100 dark:border-slate-800 px-5 py-2.5 rounded-full">
+            <Link to="/espace-client" className="hidden lg:inline-flex text-sm font-bold text-heading dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors border border-slate-100 dark:border-slate-800 px-5 py-2.5 rounded-full">
               Se connecter
-            </button>
+            </Link>
 
-            <button className="hidden sm:flex px-5 py-2.5 lg:px-6 lg:py-3 bg-primary hover:bg-primary-hover text-white text-xs lg:text-sm font-extrabold rounded-full transition-all active:scale-95 whitespace-nowrap shadow-lg shadow-primary/20 items-center justify-center">
+            <Link to="/demande" className="hidden sm:inline-flex px-5 py-2.5 lg:px-6 lg:py-3 bg-primary hover:bg-primary-hover text-white text-xs lg:text-sm font-extrabold rounded-full transition-all active:scale-95 whitespace-nowrap shadow-lg shadow-primary/20 items-center justify-center">
               Démarrer gratuitement
-            </button>
+            </Link>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -118,9 +117,9 @@ const Header = () => {
 
       {/* Mobile Menu Modal */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-heading/20 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
-          <div className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded-[32px] p-8 shadow-2xl border border-slate-50 dark:border-slate-800 animate-slide-up text-center">
+          <div className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded-4xl p-8 shadow-2xl border border-slate-50 dark:border-slate-800 animate-slide-up text-center">
             <button className="absolute top-6 right-6 p-2 text-slate-400 hover:text-heading bg-slate-50 rounded-full" onClick={() => setIsMenuOpen(false)}>
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -133,11 +132,13 @@ const Header = () => {
             </div>
 
             <nav className="flex flex-col gap-6 mb-10">
-              <MobileNavLink href="#" active onClick={() => setIsMenuOpen(false)}>Accueil</MobileNavLink>
-              <MobileNavLink href="#features" onClick={() => setIsMenuOpen(false)}>Fonctionnalités</MobileNavLink>
-              <MobileNavLink href="#tarifs" onClick={() => setIsMenuOpen(false)}>Tarifs</MobileNavLink>
-              <MobileNavLink href="#faq" onClick={() => setIsMenuOpen(false)}>FAQ</MobileNavLink>
-              <MobileNavLink href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</MobileNavLink>
+              <MobileNavLink to="/" active onClick={() => setIsMenuOpen(false)}>Accueil</MobileNavLink>
+              <MobileNavLink to="/#features" onClick={() => setIsMenuOpen(false)}>Fonctionnalités</MobileNavLink>
+              <MobileNavLink to="/#tarifs" onClick={() => setIsMenuOpen(false)}>Tarifs</MobileNavLink>
+              <MobileNavLink to="/blog" onClick={() => setIsMenuOpen(false)}>Blog</MobileNavLink>
+              <MobileNavLink to="/espace-client" onClick={() => setIsMenuOpen(false)}>Espace Client</MobileNavLink>
+              <MobileNavLink to="/#faq" onClick={() => setIsMenuOpen(false)}>FAQ</MobileNavLink>
+              <MobileNavLink to="/#contact" onClick={() => setIsMenuOpen(false)}>Contact</MobileNavLink>
             </nav>
 
             <div className="flex flex-col gap-3">
@@ -155,16 +156,16 @@ const Header = () => {
   );
 };
 
-const NavLink = ({ href, children, active = false }) => (
-  <a href={href} className={`text-[13px] font-bold transition-colors hover:text-primary ${active ? 'text-primary' : 'text-slate-400 dark:text-slate-500'}`}>
+const NavLink = ({ to, children }) => (
+  <Link to={to} className="text-[13px] font-bold text-slate-400 dark:text-slate-500 transition-colors hover:text-primary">
     {children}
-  </a>
+  </Link>
 );
 
-const MobileNavLink = ({ href, children, active = false, onClick }) => (
-  <a href={href} onClick={onClick} className={`text-sm font-bold transition-colors ${active ? 'text-primary' : 'text-slate-500 hover:text-primary'}`}>
+const MobileNavLink = ({ to, children, onClick }) => (
+  <Link to={to} onClick={onClick} className="text-sm font-bold text-slate-500 transition-colors hover:text-primary">
     {children}
-  </a>
+  </Link>
 );
 
 export default Header;
