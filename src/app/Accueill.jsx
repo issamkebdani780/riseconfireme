@@ -14,7 +14,7 @@ import Integrations from '../components/sections/Integrations';
 import Pricing from '../components/sections/prix';
 import APropos from '../components/sections/A_propos';
 import Blog from '../components/sections/Blog';
-import FAQ from '../components/sections/faq';
+import FAQ from '../components/sections/FAQ';
 import Contact from '../components/sections/Contact';
 import FinalCTA from '../components/sections/cta';
 
