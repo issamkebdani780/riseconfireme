@@ -157,24 +157,9 @@ const Pricing = () => {
                     ))}
                 </div>
 
-                {/* ROI Calculator Preview (Simple) */}
-                <div className="max-w-4xl mx-auto mt-24 animate-slide-up" style={{ animationDelay: '0.7s' }}>
-                    <div className="bg-white dark:bg-slate-900 rounded-[44px] p-8 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-premium flex flex-col lg:flex-row items-center gap-12 text-center lg:text-left overflow-hidden relative group">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
-                        
-                        <div className="shrink-0 w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-3xl flex items-center justify-center text-primary shadow-sm border border-blue-100 dark:border-blue-800 relative z-10">
-                            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                        </div>
-                        
-                        <div className="flex-1 relative z-10">
-                            <h4 className="text-xl font-black text-heading dark:text-white mb-2">Simulez votre gain de rentabilité.</h4>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Découvrez combien vous pourriez économiser en réduisant vos retours de seulement 15%.</p>
-                        </div>
-                        
-                        <button className="px-8 py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl text-xs font-bold tracking-widest uppercase hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-lg active:scale-95 relative z-10 whitespace-nowrap">
-                            Accéder au calculateur
-                        </button>
-                    </div>
+                {/* Interactive ROI Calculator */}
+                <div className="max-w-5xl mx-auto mt-24 animate-slide-up" style={{ animationDelay: '0.7s' }}>
+                    <RoiCalculator />
                 </div>
 
                  {/* Help Card */}
@@ -188,6 +173,146 @@ const Pricing = () => {
 
             </div>
         </section>
+    );
+};
+
+const RoiCalculator = () => {
+    const [orders, setOrders] = useState(1000);
+    const [returnRate, setReturnRate] = useState(30);
+    const [avgOrderValue, setAvgOrderValue] = useState(5000);
+
+    // Current Loss Calculations
+    const totalReturns = Math.round(orders * (returnRate / 100));
+    const lostRevenue = totalReturns * avgOrderValue;
+    const lostShipping = totalReturns * 600; // Assume 600 DA average shipping cost
+    const totalLoss = lostRevenue + lostShipping;
+
+    // RiseConfirm Recovery Calculations (Assume 30% of returns are recovered)
+    const recoveredOrders = Math.round(totalReturns * 0.30);
+    const recoveredRevenue = recoveredOrders * avgOrderValue;
+    const recoveredShipping = recoveredOrders * 600;
+    const totalRecovered = recoveredRevenue + recoveredShipping;
+
+    return (
+        <div className="bg-white dark:bg-slate-900 rounded-[44px] p-8 lg:p-12 border border-slate-100 dark:border-slate-800 shadow-premium relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+            
+            <div className="relative z-10 grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+                {/* Inputs */}
+                <div className="lg:col-span-5 space-y-8">
+                    <div>
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-primary mb-6 border border-blue-100 dark:border-blue-800/50 shadow-sm">
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                        </div>
+                        <h3 className="text-2xl font-black text-heading dark:text-white mb-2">Simulateur de <span className="text-primary italic">Pertes & ROI</span></h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Découvrez combien d'argent vous perdez à cause des retours, et combien RiseConfirm peut sauver.</p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="space-y-3">
+                            <div className="flex justify-between text-sm font-bold">
+                                <span className="text-slate-700 dark:text-slate-300">Commandes mensuelles</span>
+                                <span className="text-primary">{orders} CMD</span>
+                            </div>
+                            <input 
+                                type="range" min="100" max="10000" step="100" 
+                                value={orders} onChange={(e) => setOrders(Number(e.target.value))}
+                                className="w-full accent-primary"
+                            />
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="flex justify-between text-sm font-bold">
+                                <span className="text-slate-700 dark:text-slate-300">Taux de retour actuel</span>
+                                <span className="text-primary">{returnRate}%</span>
+                            </div>
+                            <input 
+                                type="range" min="10" max="60" step="1" 
+                                value={returnRate} onChange={(e) => setReturnRate(Number(e.target.value))}
+                                className="w-full accent-rose-500"
+                            />
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="flex justify-between text-sm font-bold">
+                                <span className="text-slate-700 dark:text-slate-300">Panier moyen</span>
+                                <span className="text-primary">{avgOrderValue.toLocaleString()} DA</span>
+                            </div>
+                            <input 
+                                type="range" min="1000" max="25000" step="500" 
+                                value={avgOrderValue} onChange={(e) => setAvgOrderValue(Number(e.target.value))}
+                                className="w-full accent-primary"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Outputs */}
+                <div className="lg:col-span-7 grid md:grid-cols-2 gap-6">
+                    {/* Loss Block */}
+                    <div className="bg-rose-50/50 dark:bg-rose-900/10 rounded-[32px] p-6 lg:p-8 border border-rose-100 dark:border-rose-800/30 flex flex-col justify-center">
+                        <h4 className="text-[11px] font-black text-rose-400 dark:text-rose-500 uppercase tracking-widest mb-6">Vos pertes actuelles / Mois</h4>
+                        
+                        <div className="space-y-4 mb-6">
+                            <div className="flex justify-between items-center pb-3 border-b border-rose-100 dark:border-rose-800/30">
+                                <span className="text-xs font-bold text-slate-500">Commandes échouées</span>
+                                <span className="text-sm font-black text-rose-500">{totalReturns}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-3 border-b border-rose-100 dark:border-rose-800/30">
+                                <span className="text-xs font-bold text-slate-500">Perte logistique</span>
+                                <span className="text-sm font-black text-rose-500">-{lostShipping.toLocaleString()} DA</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500">C.A. Perdu</span>
+                                <span className="text-sm font-black text-rose-500">-{lostRevenue.toLocaleString()} DA</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-auto pt-4 text-center">
+                            <div className="text-[10px] uppercase font-black text-rose-400 tracking-widest mb-1">Total Perdu</div>
+                            <div className="text-2xl lg:text-3xl font-extrabold text-heading dark:text-white truncate">
+                                -{totalLoss.toLocaleString()} <span className="text-base font-bold text-slate-400">DA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Recovered Block */}
+                    <div className="bg-emerald-50/50 dark:bg-emerald-900/10 rounded-[32px] p-6 lg:p-8 border border-emerald-100 dark:border-emerald-800/30 flex flex-col justify-center">
+                        <h4 className="text-[11px] font-black text-emerald-500 dark:text-emerald-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                             Récupéré via RiseConfirm
+                        </h4>
+                        
+                        <div className="space-y-4 mb-6">
+                            <div className="flex justify-between items-center pb-3 border-b border-emerald-100 dark:border-emerald-800/30">
+                                <span className="text-xs font-bold text-slate-500">Commandes sauvées</span>
+                                <span className="text-sm font-black text-emerald-500">+{recoveredOrders}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-3 border-b border-emerald-100 dark:border-emerald-800/30">
+                                <span className="text-xs font-bold text-slate-500">Économie logistique</span>
+                                <span className="text-sm font-black text-emerald-500">+{recoveredShipping.toLocaleString()} DA</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500">C.A. Récupéré</span>
+                                <span className="text-sm font-black text-emerald-500">+{recoveredRevenue.toLocaleString()} DA</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-auto pt-4 text-center">
+                            <div className="text-[10px] uppercase font-black text-emerald-500 tracking-widest mb-1">Bénéfice Net Ajouté</div>
+                            <div className="text-2xl lg:text-3xl font-extrabold text-heading dark:text-white truncate">
+                                +{totalRecovered.toLocaleString()} <span className="text-base font-bold text-slate-400">DA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div className="mt-8 text-center">
+                <p className="text-[10px] text-slate-400 font-medium italic">*Estimation constatée : RiseConfirm convertit en moyenne 30% des commandes initialement en échec.</p>
+            </div>
+        </div>
     );
 };
 

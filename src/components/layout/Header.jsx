@@ -48,11 +48,12 @@ const Header = () => {
   ];
 
   const ecoItems = [
-    { title: "RiseManager", description: "Gestion e-commerce globale", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> },
-    { title: "RiseCart", description: "Checkout optimisé pour le COD", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg> },
-    { title: "FBR", description: "Logistique et stockage", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> },
-    { title: "RiseAcademy", description: "Formation e-commerce", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg> },
-    { title: "RisePay", description: "Solutions de paiement", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> },
+    { title: "RiseConfirm", description: "Le Cœur de la Confirmation", icon: <img src="/ecosystem/riseconfirem.jpg" alt="RiseConfirm" className="w-full h-full rounded-xl object-cover" /> },
+    { title: "RiseManager", description: "Gestion e-commerce globale", icon: <img src="/ecosystem/risemanager.png" alt="RiseManager" className="w-full h-full rounded-xl object-cover bg-white" /> },
+    { title: "RiseCart", description: "Checkout optimisé pour le COD", icon: <img src="/ecosystem/risecart.jpg" alt="RiseCart" className="w-full h-full rounded-xl object-cover" /> },
+    { title: "FBR", description: "Logistique et stockage", icon: <img src="/ecosystem/fbr.jpg" alt="FBR" className="w-full h-full rounded-xl object-cover" /> },
+    { title: "RiseAcademy", description: "Formation e-commerce", icon: <img src="/ecosystem/riseacademy.png" alt="RiseAcademy" className="w-full h-full rounded-xl object-cover" /> },
+    { title: "RisePay", description: "Solutions de paiement", icon: <img src="/ecosystem/risepay.jpg" alt="RisePay" className="w-full h-full rounded-xl object-cover" /> },
   ];
 
   return (
@@ -74,7 +75,7 @@ const Header = () => {
             <NavLink to="/">Accueil</NavLink>
             <DropDown title="Solutions" items={featuresItems} columns={2} />
             <DropDown title="Écosystème" items={ecoItems} columns={1} />
-            <NavLink to="/#tarifs">Tarifs</NavLink>
+            {/* <NavLink to="/#tarifs">Tarifs</NavLink> */}
             <NavLink to="/blog">Blog</NavLink>
             <NavLink to="/espace-client">Espace Client</NavLink>
           </nav>

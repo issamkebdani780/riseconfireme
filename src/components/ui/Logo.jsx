@@ -8,20 +8,11 @@ const Logo = ({
 }) => {
   return (
     <div className={className}>
-      <svg className={iconClassName} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Gradient Background */}
-        <rect width="100" height="100" rx="22" fill="url(#logo_gradient)"/>
-        
-        {/* Confirmation Checkmark */}
-        <path d="M 30 50 L 45 65 L 75 35" stroke="#0B1A28" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round"/>
-        
-        <defs>
-          <linearGradient id="logo_gradient" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#1DC8F2"/>
-            <stop offset="1" stopColor="#0B79F2"/>
-          </linearGradient>
-        </defs>
-      </svg>
+      <img 
+        src="/ecosystem/riseconfirem.jpg" 
+        alt="RiseConfirm Logo" 
+        className={`${iconClassName} object-cover rounded-[8px]`} 
+      />
       {showText && <span className={textClassName}>RiseConfirm</span>}
     </div>
   );
