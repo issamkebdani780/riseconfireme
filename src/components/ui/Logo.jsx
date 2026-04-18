@@ -10,10 +10,10 @@ const Logo = ({
     <div className={className}>
       <img 
         src="/ecosystem/riseconfirem.jpg" 
-        alt="RiseConfirm Logo" 
+        alt="riseconfireme Logo" 
         className={`${iconClassName} object-cover rounded-[8px]`} 
       />
-      {showText && <span className={textClassName}>RiseConfirm</span>}
+      {showText && <span className={textClassName}>riseconfireme</span>}
     </div>
   );
 };

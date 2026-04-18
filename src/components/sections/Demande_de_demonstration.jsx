@@ -9,10 +9,10 @@ const DemandeDeDemonstration = () => {
                         Démonstration
                     </span>
                     <h2 className="mt-6 text-4xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white">
-                        Demandez votre démonstration RiseConfirm.
+                        Demandez votre démonstration riseconfireme.
                     </h2>
                     <p className="mt-5 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-                        Découvrez en direct comment RiseConfirm sécurise vos commandes COD, réduit les retours et augmente votre conversion client.
+                        Découvrez en direct comment riseconfireme sécurise vos commandes COD, réduit les retours et augmente votre conversion client.
                     </p>
                 </div>
 
@@ -21,7 +21,7 @@ const DemandeDeDemonstration = () => {
                         <div className="mb-10">
                             <div className="text-sm font-black uppercase tracking-[0.28em] text-primary mb-3">Formulaire de demande</div>
                             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                Remplissez ce formulaire et notre équipe RiseConfirm vous contacte sous 24h pour une session personnalisée.
+                                Remplissez ce formulaire et notre équipe riseconfireme vous contacte sous 24h pour une session personnalisée.
                             </p>
                         </div>
 
@@ -69,7 +69,7 @@ const DemandeDeDemonstration = () => {
                             <div>
                                 <div className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-3">Pourquoi une démo ?</div>
                                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    Obtenez un aperçu opérationnel de RiseConfirm, découvrez l’intégration avec votre boutique et voyez immédiatement comment réduire les retours COD.
+                                    Obtenez un aperçu opérationnel de riseconfireme, découvrez l’intégration avec votre boutique et voyez immédiatement comment réduire les retours COD.
                                 </p>
                             </div>
 

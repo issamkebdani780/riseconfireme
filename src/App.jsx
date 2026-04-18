@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Home from './pages/Home';
 import Demande from './pages/Demande';
 import BlogPage from './pages/BlogPage';
@@ -10,6 +12,13 @@ import ScrollToTop from './components/ui/ScrollToTop';
 import ChatBot from './components/sections/ChatBot';
 
 function App() {
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
+
   return (
     <BrowserRouter>
       <ScrollToTop />

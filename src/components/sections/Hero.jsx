@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Hero = () => {
+  const { t } = useTranslation();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
@@ -28,30 +30,30 @@ const Hero = () => {
             {/* Heading */}
             <div className="space-y-6">
               <h1 className="text-4xl lg:text-6xl font-extrabold leading-tight lg:leading-[1.1] text-heading dark:text-white animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                Confirmez chaque commande <br />
-                <span className="text-primary tracking-tight">par appel client.</span>
+                {t('Confirmez chaque commande')} <br />
+                <span className="text-primary tracking-tight">{t('par appel client.')}</span>
               </h1>
               <p className="text-lg lg:text-xl text-body dark:text-slate-400 max-w-xl leading-relaxed animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                RiseConfirm gère vos appels de confirmation de commandes pour réduire les retours, augmenter les livraisons réussies et sécuriser vos ventes en temps réel.
+                {t('hero_desc')}
               </p>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-4 animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <button className="px-8 py-4 bg-primary hover:bg-primary-hover text-white rounded-2xl font-semibold shadow-lg shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95">
-                Démarrer l'essai gratuit
+                {t("Démarrer gratuitement")}
               </button>
               <button className="px-8 py-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-primary border border-slate-100 dark:border-slate-800 rounded-2xl font-semibold transition-all hover:-translate-y-1 flex items-center gap-2">
-                Demander une démo
+                {t("Demander une démo")}
               </button>
             </div>
 
             {/* Static Hero Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900/5 dark:bg-slate-800/70 p-4 rounded-3xl border border-slate-200/70 dark:border-slate-700 mt-6 animate-slide-up" style={{ animationDelay: '0.45s' }}>
               {[
-                { value: "+30%", label: "de livraisons réussies" },
-                { value: "-25%", label: "de retours produits" },
-                { value: "+20%", label: "d'upsell" },
+                { value: "+30%", label: t("de livraisons réussies") },
+                { value: "-25%", label: t("de retours produits") },
+                { value: "+20%", label: t("d'upsell") },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <div className="text-3xl lg:text-4xl font-extrabold text-heading dark:text-white">{stat.value}</div>
@@ -62,7 +64,7 @@ const Hero = () => {
 
             {/* Trust Points */}
             <div className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-6 animate-slide-up" style={{ animationDelay: '0.5s' }}>
-              {["Appels de confirmation", "Intégration instantanée", "Paiement par commande livrée"].map((point, index) => (
+              {[t("Appels de confirmation"), t("Intégration instantanée"), t("Paiement par commande livrée")].map((point, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400">
                   <div className="w-5 h-5 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center border border-blue-100 dark:border-blue-800">
                     <svg className="w-3 h-3 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -85,28 +87,28 @@ const Hero = () => {
                 className="w-full h-[520px] object-cover sm:h-[600px]"
               />
             </div>
-            <div className="absolute -top-10 left-6 lg:left-10 animate-float-delayed">
+            <div className="absolute -top-10 left-6 lg:left-10 rtl:left-auto rtl:right-6 rtl:lg:right-10 animate-float-delayed">
               <div className="w-[220px] rounded-[30px] bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-xl p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-3xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
                     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M6 19h12M9 4h6M4 10h16" /></svg>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 font-semibold">Commandes</div>
-                    <div className="mt-1 text-2xl font-extrabold text-heading dark:text-white">1,247</div>
+                    <div className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 font-semibold text-start">{t('Commandes')}</div>
+                    <div className="mt-1 text-2xl font-extrabold text-heading dark:text-white text-start">1,247</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="absolute -bottom-10 right-6 lg:right-10 animate-float-slow">
+            <div className="absolute -bottom-10 right-6 lg:right-10 rtl:right-auto rtl:left-6 rtl:lg:left-10 animate-float-slow">
               <div className="w-[220px] rounded-[30px] bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-xl p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-3xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
                     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M12 8v8m4-4H8" /></svg>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 font-semibold">Profit</div>
-                    <div className="mt-1 text-2xl font-extrabold text-heading dark:text-white">284,500 DA</div>
+                    <div className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 font-semibold text-start">{t('Profit')}</div>
+                    <div className="mt-1 text-2xl font-extrabold text-heading dark:text-white text-start">284,500 DA</div>
                   </div>
                 </div>
               </div>

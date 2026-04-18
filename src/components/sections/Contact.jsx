@@ -1,21 +1,23 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+    const { t } = useTranslation();
     const contactMethods = [
         { 
             icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z" /></svg>, 
             label: "Email", 
             value: "contact@risemanager.com", 
-            sub: "Réponse sous 24h" 
+            sub: t("Réponse sous 24h") 
         },
         { 
             icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>, 
-            label: "Téléphone", 
+            label: t("Téléphone"), 
             value: "0665 58 44 56", 
         },
         { 
             icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, 
-            label: "Bureaux", 
+            label: t("Bureaux"), 
             value: "Oran", 
             sub: "Algérie" 
         }
@@ -37,7 +39,7 @@ const Contact = () => {
         { 
             icon: <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.483 8.413-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.308 1.655zm6.305-3.654c1.54.914 3.411 1.401 5.314 1.402h.005c5.452 0 9.889-4.438 9.892-9.891 0-2.641-1.03-5.122-2.898-6.992-1.868-1.87-4.35-2.9-6.992-2.9-5.454 0-9.89 4.437-9.893 9.891-.001 1.905.501 3.766 1.455 5.385l-1.082 3.95 4.045-1.061-.246-.145zm11.332-13.011c-.302-.151-1.787-.881-2.064-.981s-.478-.151-.68.151-.781.981-.956 1.182-.352.227-.655.076-1.28-.422-2.441-1.456c-.903-.805-1.512-1.8-1.69-2.098-.176-.301-.019-.464.133-.613s.302-.352.453-.528c.151-.176.202-.302.302-.503s.05-.378-.025-.528c-.075-.151-.68-1.636-.932-2.24-.247-.591-.497-.508-.68-.517s-.378-.013-.578-.013-.528.076-.805.378-1.057 1.031-1.057 2.515.201 1.082 2.918 1.282c.151.201 2.112 3.226 5.116 4.526.715.309 1.273.498 1.708.636.72.229 1.376.196 1.895.119.579-.086 1.787-.73 2.039-1.436.252-.705.252-1.31.176-1.436s-.277-.202-.579-.352z"/></svg>, 
             label: "WhatsApp",
-            href: "tel:0665584456",
+            href: "https://wa.me/213665584456",
             hoverClass: "hover:bg-green-500 hover:border-green-500 hover:text-white"
         }
     ];
@@ -53,13 +55,13 @@ const Contact = () => {
                         <div className="space-y-6">
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800 shadow-sm transition-colors">
                                 <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-none">Contactez-nous</span>
+                                <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-none">{t('Contactez-nous')}</span>
                             </div>
                             <h2 className="text-4xl lg:text-6xl font-extrabold text-heading dark:text-white leading-tight">
-                                Discutons de <span className="text-primary italic">votre projet.</span>
+                                {t('Discutons de')} <span className="text-primary italic">{t('votre projet.')}</span>
                             </h2>
                             <p className="text-lg text-body dark:text-slate-400 leading-relaxed max-w-md">
-                                Que vous soyez une petite boutique ou une grande marque, notre équipe est prête à optimiser votre service client.
+                                {t('contact_desc')}
                             </p>
                         </div>
 
@@ -67,12 +69,12 @@ const Contact = () => {
                         <div className="space-y-6">
                             {contactMethods.map((item, i) => (
                                 <div key={i} className="flex gap-4 p-5 rounded-[28px] bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group">
-                                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm border border-slate-100 dark:border-slate-700 group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-6">
+                                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm border border-slate-100 dark:border-slate-700 group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-6 rtl:group-hover:-rotate-6">
                                         {item.icon}
                                     </div>
-                                    <div>
+                                    <div className="text-start">
                                         <div className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{item.label}</div>
-                                        <div className="text-base font-bold text-heading dark:text-white mb-0.5">{item.value}</div>
+                                        <div className="text-base font-bold text-heading dark:text-white mb-0.5" dir="ltr">{item.value}</div>
                                         <div className="text-xs text-slate-400 dark:text-slate-600 font-medium">{item.sub}</div>
                                     </div>
                                 </div>
@@ -81,7 +83,7 @@ const Contact = () => {
 
                         {/* Social Links */}
                         <div className="space-y-4 pt-4">
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Suivez-nous</div>
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('Suivez-nous')}</div>
                             <div className="flex gap-3">
                                 {socialLinks.map((social, i) => (
                                     <a key={i} href={social.href || "#"} title={social.label} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 transition-all ${social.hoverClass || 'hover:border-primary hover:text-primary'}`}>
@@ -100,58 +102,58 @@ const Contact = () => {
                             <form className="space-y-8 relative z-10" onSubmit={(e) => e.preventDefault()}>
                                 <div className="grid sm:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1">Nom Complet</label>
+                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1 rtl:mr-1 rtl:ml-0 text-start block">{t('Nom Complet')}</label>
                                         <input 
                                             type="text" 
-                                            placeholder="Ex: Mohamed Amin"
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all"
+                                            placeholder={t("placeholder_nom")}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all text-start"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1">Email Professionnel</label>
+                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1 rtl:mr-1 rtl:ml-0 text-start block">{t('Email Professionnel')}</label>
                                         <input 
                                             type="email" 
-                                            placeholder="mohamed@boutique.com"
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all"
+                                            placeholder={t("placeholder_email")}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all text-start"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="grid sm:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1">Volume Mensuel</label>
-                                        <select className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer">
-                                            <option>Moins de 100 CMD / jour</option>
-                                            <option>100 - 500 CMD / jour</option>
-                                            <option>Plus de 500 CMD / jour</option>
+                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1 rtl:mr-1 rtl:ml-0 text-start block">{t('Volume Mensuel')}</label>
+                                        <select className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer text-start">
+                                            <option>{t('placeholder_volume1')}</option>
+                                            <option>{t('placeholder_volume2')}</option>
+                                            <option>{t('placeholder_volume3')}</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1">Sujet</label>
+                                        <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1 rtl:mr-1 rtl:ml-0 text-start block">{t('Sujet')}</label>
                                         <input 
                                             type="text" 
-                                            placeholder="Demande de démo, Tarifs..."
-                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all"
+                                            placeholder={t("placeholder_sujet")}
+                                            className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all text-start"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1">Message (Optionnel)</label>
+                                    <label className="text-xs font-black text-heading dark:text-slate-400 uppercase tracking-wider ml-1 rtl:mr-1 rtl:ml-0 text-start block">{t('Message (Optionnel)')}</label>
                                     <textarea 
                                         rows="4"
-                                        placeholder="Dites-nous en plus sur vos besoins..."
-                                        className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all resize-none"
+                                        placeholder={t("placeholder_message")}
+                                        className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold text-heading dark:text-white outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all resize-none text-start"
                                     ></textarea>
                                 </div>
 
                                 <button className="w-full py-5 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/20 hover:bg-primary-hover hover:-translate-y-1 active:scale-95 transition-all flex items-center justify-center gap-3 group/btn">
-                                    Envoyer ma demande
-                                    <svg className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                                    {t('Envoyer ma demande')}
+                                    <svg className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 rtl:group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                                 </button>
                                 
                                 <p className="text-center text-[10px] text-slate-400 dark:text-slate-600 font-bold uppercase tracking-[0.15em]">
-                                    Estimation de réponse : moins de 2 heures
+                                    {t('estimation_reponse')}
                                 </p>
                             </form>
                         </div>
