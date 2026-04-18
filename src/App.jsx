@@ -7,6 +7,7 @@ import Legals from './components/policy/legals';
 import Confidenialities from './components/policy/confidenialities';
 import CGV from './components/policy/cgv';
 import ScrollToTop from './components/ui/ScrollToTop';
+import ChatBot from './components/sections/ChatBot';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/cgv" element={<CGV />} />
         <Route path="*" element={<Home />} />
       </Routes>
+      <ChatBot />
     </BrowserRouter>
   );
 }

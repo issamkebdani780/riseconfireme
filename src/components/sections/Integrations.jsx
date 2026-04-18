@@ -72,9 +72,9 @@ const Integrations = () => {
                                     className={`bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-none hover:shadow-2xl hover:border-slate-200 dark:hover:border-slate-700 transition-all duration-500 group relative overflow-hidden flex flex-col items-center text-center space-y-5 animate-slide-up bg-gradient-to-b from-transparent to-slate-50/50 dark:to-slate-800/20`}
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >
-                                    <div className="w-[72px] h-[72px] bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center p-3 grayscale group-hover:grayscale-0 transition-all duration-500 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:-translate-y-1 group-hover:shadow-md">
+                                    <div className="w-[72px] h-[72px] bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center p-3 transition-all duration-500 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:-translate-y-1 group-hover:shadow-md">
                                         {item.logo === "code" ? (
-                                            <svg className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                                            <svg className="w-8 h-8 text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                                         ) : (
                                             <img src={item.logo} alt={item.name} className="w-full h-full object-contain rounded-md" />
                                         )}

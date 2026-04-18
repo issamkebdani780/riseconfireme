@@ -1,6 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Comment_ca_marche = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [commandes, setCommandes] = useState([
+        { id: '#CMD-842', client: 'Sarah M.', status: 'Validée', amount: '15,000 DA', time: 'Il y a 2 min' },
+        { id: '#CMD-841', client: 'Karim B.', status: 'En attente', amount: '8,500 DA', time: 'Il y a 15 min' },
+        { id: '#CMD-840', client: 'Lina K.', status: 'Annulée', amount: '12,000 DA', time: 'Il y a 1h' }
+    ]);
+
+    const handleSearch = (e) => setSearchTerm(e.target.value);
+    
+    const handleAdd = () => {
+        const newId = `#CMD-${Math.floor(Math.random() * 1000) + 1000}`;
+        const newAmount = `${Math.floor(Math.random() * 20) + 5},000 DA`;
+        const clients = ['Amine T.', 'Yasmine C.', 'Walid R.', 'Kenza S.', 'Mehdi B.'];
+        const randomClient = clients[Math.floor(Math.random() * clients.length)];
+        
+        const newCmd = {
+            id: newId,
+            client: randomClient,
+            status: 'Validée',
+            amount: newAmount,
+            time: 'À l\'instant'
+        };
+        setCommandes([newCmd, ...commandes]);
+    };
+
+    const handleDelete = (idToDelete) => {
+        setCommandes(commandes.filter(cmd => cmd.id !== idToDelete));
+    };
+    
+    const filteredCommandes = commandes.filter(cmd => 
+        cmd.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        cmd.client.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const steps = [
         {
             icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" /></svg>,
@@ -106,21 +140,94 @@ const Comment_ca_marche = () => {
                                 </div>
                             </div>
                             
-                            <div className="relative">
-                                {/* Visual Mockup */}
-                                <div className="bg-white/5 backdrop-blur-md rounded-[32px] p-8 border border-white/10 shadow-2xl relative overflow-hidden">
-                                     <div className="flex flex-col gap-4">
+                            <div className="relative mt-8 lg:mt-0">
+                                {/* Interactive Indicator Badge */}
+                                <div className="absolute -top-4 -left-4 z-20 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest py-2 px-4 rounded-full shadow-lg shadow-emerald-500/30 flex items-center gap-2 animate-bounce">
+                                    <span className="relative flex h-2 w-2">
+                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                    </span>
+                                    Interactif : Testez-moi
+                                </div>
+                                {/* Interactive Visual Mockup */}
+                                <div className="bg-white/5 backdrop-blur-md rounded-[32px] p-6 border border-white/10 shadow-2xl relative overflow-hidden flex flex-col h-[400px]">
+                                    
+                                    {/* Mini Stats */}
+                                    <div className="grid grid-cols-3 gap-2 mb-4 shrink-0">
                                          {[
-                                             { label: "Appels Validés", value: "842", color: "primary" },
-                                             { label: "Taux Confirmation", value: "92.4%", color: "emerald-400" },
-                                             { label: "Profit Récupéré", value: "1.2M DA", color: "amber-400" }
+                                             { label: "Validés", value: "842" },
+                                             { label: "Taux", value: "92.4%" },
+                                             { label: "Profit", value: "1.2M" }
                                          ].map((item, idx) => (
-                                             <div key={idx} className="p-4 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center group/card hover:bg-white/10 transition-all">
-                                                 <span className="text-xs font-bold text-slate-400">{item.label}</span>
-                                                 <span className={`text-lg font-black text-white`}>{item.value}</span>
+                                             <div key={idx} className="p-2 bg-white/5 rounded-xl border border-white/5 text-center">
+                                                 <div className="text-[10px] sm:text-xs font-bold text-slate-400 truncate">{item.label}</div>
+                                                 <div className="text-sm sm:text-base font-black text-white">{item.value}</div>
                                              </div>
                                          ))}
-                                     </div>
+                                    </div>
+
+                                    {/* Search & Add */}
+                                    <div className="flex gap-2 mb-4 shrink-0">
+                                        <div className="relative flex-1">
+                                            <input 
+                                                type="text" 
+                                                placeholder="Rechercher une commande..." 
+                                                value={searchTerm}
+                                                onChange={handleSearch}
+                                                className="w-full bg-white/10 text-white text-xs sm:text-sm rounded-xl py-2.5 pl-9 pr-3 border border-white/10 focus:outline-none focus:border-primary transition-colors placeholder:text-slate-500"
+                                            />
+                                            <svg className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        </div>
+                                        <button 
+                                            onClick={handleAdd}
+                                            className="w-10 h-10 flex-shrink-0 bg-primary hover:bg-primary-hover text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-primary/20 hover:scale-105 active:scale-95"
+                                            title="Ajouter une commande"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                        </button>
+                                    </div>
+
+                                    {/* Commandes List */}
+                                    <div className="flex-1 overflow-y-auto pr-2 space-y-2 -mr-2 hide-scrollbar">
+                                        <style dangerouslySetInnerHTML={{__html: `
+                                            .hide-scrollbar::-webkit-scrollbar { display: none; }
+                                            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+                                        `}} />
+                                        {filteredCommandes.length > 0 ? (
+                                            filteredCommandes.map((cmd) => (
+                                                <div key={cmd.id} className="p-3 bg-white/5 rounded-xl border border-white/5 group hover:bg-white/10 transition-all">
+                                                    <div className="flex justify-between items-start mb-1.5">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-sm font-bold text-white">{cmd.id}</span>
+                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                                                                cmd.status === 'Validée' ? 'bg-emerald-500/20 text-emerald-400' :
+                                                                cmd.status === 'En attente' ? 'bg-amber-500/20 text-amber-400' :
+                                                                'bg-red-500/20 text-red-400'
+                                                            }`}>
+                                                                {cmd.status}
+                                                            </span>
+                                                        </div>
+                                                        <button 
+                                                            onClick={() => handleDelete(cmd.id)}
+                                                            className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                            title="Supprimer"
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                        </button>
+                                                    </div>
+                                                    <div className="flex justify-between items-center text-xs">
+                                                        <div className="text-slate-400 font-medium">{cmd.client}</div>
+                                                        <div className="font-semibold text-white">{cmd.amount}</div>
+                                                    </div>
+                                                    <div className="text-[10px] text-slate-500 mt-1">{cmd.time}</div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+                                                Aucune commande trouvée
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 {/* Floating Label */}
                                 <div className="absolute -bottom-6 -right-6 bg-primary text-white p-6 rounded-[28px] shadow-2xl animate-float">

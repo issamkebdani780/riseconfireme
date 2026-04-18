@@ -5,19 +5,18 @@ const Contact = () => {
         { 
             icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z" /></svg>, 
             label: "Email", 
-            value: "hello@riseconfirm.com", 
+            value: "contact@risemanager.com", 
             sub: "Réponse sous 24h" 
         },
         { 
             icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>, 
             label: "Téléphone", 
-            value: "+213 (0) 560 00 00 00", 
-            sub: "Lun-Ven, 9h-18h" 
+            value: "0665 58 44 56", 
         },
         { 
             icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, 
             label: "Bureaux", 
-            value: "Sidi Yahia, Hydra, Alger", 
+            value: "Oran", 
             sub: "Algérie" 
         }
     ];
@@ -25,19 +24,21 @@ const Contact = () => {
     const socialLinks = [
         { 
             icon: <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.326v21.348C0 23.403.597 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.325-.597 1.325-1.326V1.326C24 .597 23.403 0 22.675 0z"/></svg>, 
-            label: "Facebook" 
+            label: "Facebook",
+            href: "https://www.facebook.com/risecartgroup",
+            hoverClass: "hover:bg-blue-600 hover:border-blue-600 hover:text-white"
         },
         { 
             icon: <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.586-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.058-1.281.072-1.689.072-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>, 
-            label: "Instagram" 
-        },
-        { 
-            icon: <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>, 
-            label: "LinkedIn" 
+            label: "Instagram",
+            href: "https://www.instagram.com/risegroup.ecom/",
+            hoverClass: "hover:bg-pink-600 hover:border-pink-600 hover:text-white"
         },
         { 
             icon: <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.483 8.413-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.308 1.655zm6.305-3.654c1.54.914 3.411 1.401 5.314 1.402h.005c5.452 0 9.889-4.438 9.892-9.891 0-2.641-1.03-5.122-2.898-6.992-1.868-1.87-4.35-2.9-6.992-2.9-5.454 0-9.89 4.437-9.893 9.891-.001 1.905.501 3.766 1.455 5.385l-1.082 3.95 4.045-1.061-.246-.145zm11.332-13.011c-.302-.151-1.787-.881-2.064-.981s-.478-.151-.68.151-.781.981-.956 1.182-.352.227-.655.076-1.28-.422-2.441-1.456c-.903-.805-1.512-1.8-1.69-2.098-.176-.301-.019-.464.133-.613s.302-.352.453-.528c.151-.176.202-.302.302-.503s.05-.378-.025-.528c-.075-.151-.68-1.636-.932-2.24-.247-.591-.497-.508-.68-.517s-.378-.013-.578-.013-.528.076-.805.378-1.057 1.031-1.057 2.515.201 1.082 2.918 1.282c.151.201 2.112 3.226 5.116 4.526.715.309 1.273.498 1.708.636.72.229 1.376.196 1.895.119.579-.086 1.787-.73 2.039-1.436.252-.705.252-1.31.176-1.436s-.277-.202-.579-.352z"/></svg>, 
-            label: "WhatsApp" 
+            label: "WhatsApp",
+            href: "tel:0665584456",
+            hoverClass: "hover:bg-green-500 hover:border-green-500 hover:text-white"
         }
     ];
 
@@ -45,7 +46,7 @@ const Contact = () => {
         <section className="py-24 lg:py-40 bg-white dark:bg-slate-950 transition-colors duration-500 overflow-hidden" id="contact">
             <div className="container mx-auto px-4 sm:px-6">
                 
-                <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 max-w-7xl mx-auto">
+                <div className="flex flex-col items-center lg:flex-row gap-16 lg:gap-24 max-w-7xl mx-auto ">
                     
                     {/* Left: Info & Branding */}
                     <div className="w-full lg:w-5/12 space-y-12">
@@ -83,7 +84,7 @@ const Contact = () => {
                             <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Suivez-nous</div>
                             <div className="flex gap-3">
                                 {socialLinks.map((social, i) => (
-                                    <a key={i} href="#" className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:border-primary hover:text-primary transition-all">
+                                    <a key={i} href={social.href || "#"} title={social.label} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 transition-all ${social.hoverClass || 'hover:border-primary hover:text-primary'}`}>
                                         {social.icon}
                                     </a>
                                 ))}
@@ -92,7 +93,7 @@ const Contact = () => {
                     </div>
 
                     {/* Right: Contact Form */}
-                    <div className="w-full lg:w-7/12">
+                    <div className="w-full lg:w-7/12 ">
                         <div className="bg-white dark:bg-slate-900 rounded-[48px] p-8 lg:p-16 border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
                             

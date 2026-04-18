@@ -29,22 +29,7 @@ const A_propos = () => {
             <div className="container mx-auto px-4 sm:px-6">
                 
                 <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 max-w-7xl mx-auto">
-                    
-                    {/* Left: Visual/Image Placeholder */}
-                    <div className="w-full lg:w-1/2 relative group">
-                        <div className="relative z-10 rounded-[48px] overflow-hidden aspect-[4/5] bg-slate-100 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl">
-                             {/* Placeholder for Team/Culture Image */}
-                             <div className="absolute inset-0 flex items-center justify-center text-slate-300 dark:text-slate-800">
-                                 <svg className="w-32 h-32 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                             </div>
-                             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
-                        </div>
-                        {/* Decorative floating elements */}
-                        <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-primary/20 rounded-full blur-[80px] animate-pulse" />
-                        <div className="absolute -top-10 -left-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-[60px] animate-pulse delay-1000" />
-                    </div>
-
-                    {/* Right: Content */}
+                    {/* Content */}
                     <div className="w-full lg:w-1/2 space-y-12">
                         <div className="space-y-6">
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800 shadow-sm transition-colors">
@@ -73,6 +58,22 @@ const A_propos = () => {
                             ))}
                         </div>
                     </div>
+                    {/*  Visual/Image */}
+                    <div className="w-full lg:w-1/2 relative group">
+                        <div className="relative z-10 rounded-[48px] overflow-hidden aspect-[4/5] bg-slate-100 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-primary/30">
+                             <img 
+                                 src="/centredappel2.jpg" 
+                                 alt="L'équipe RiseConfirm en action" 
+                                 className="absolute inset-0 w-full h-full transition-transform duration-1000 group-hover:scale-105" 
+                             />
+                             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/10 to-transparent transition-opacity duration-700 group-hover:opacity-60" />
+                        </div>
+                        {/* Decorative floating elements */}
+                        <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-primary/20 rounded-full blur-[80px] animate-pulse" />
+                        <div className="absolute -top-10 -left-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-[60px] animate-pulse delay-1000" />
+                    </div>
+
+                    
                 </div>
 
             </div>
