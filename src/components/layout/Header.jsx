@@ -67,7 +67,7 @@ const Header = () => {
           <Logo 
             className="flex items-center gap-2 shrink-0 cursor-pointer"
             iconClassName="w-8 h-8 lg:w-9 lg:h-9"
-            textClassName="text-xl lg:text-2xl font-black text-heading dark:text-white tracking-tight hidden sm:block"
+            textClassName="text-xl lg:text-2xl font-black text-heading dark:text-white tracking-tight"
           />
 
           {/* Navigation - Desktop */}
