@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Espace_Client = () => {
@@ -12,7 +12,7 @@ const Espace_Client = () => {
                         {t('Espace Client')}
                     </span>
                     <h2 className="mt-6 text-4xl sm:text-5xl font-black tracking-tight text-slate-950 dark:text-white">
-                        {t('Votre accès sécurisé à riseconfireme.')}
+                        {t('Votre accès sécurisé à RiseConfirm.')}
                     </h2>
                     <p className="mt-5 text-lg leading-8 text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
                         {t('espace_client_desc')}
@@ -88,7 +88,7 @@ const Espace_Client = () => {
                                     <div className="text-[10px] uppercase tracking-[0.3em] text-primary font-black mb-2 text-start">{t('Aperçu rapide')}</div>
                                     <h3 className="text-2xl font-black text-slate-950 dark:text-white text-start">{t('Un cockpit dédié à votre croissance.')}</h3>
                                 </div>
-                                <div className="rounded-3xl bg-slate-100 px-4 py-3 text-xs uppercase tracking-[0.3em] text-slate-700 font-black dark:bg-slate-950 dark:text-slate-300 shrink-0">riseconfireme</div>
+                                <div className="rounded-3xl bg-slate-100 px-4 py-3 text-xs uppercase tracking-[0.3em] text-slate-700 font-black dark:bg-slate-950 dark:text-slate-300 shrink-0">RiseConfirm</div>
                             </div>
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">

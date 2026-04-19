@@ -1,7 +1,7 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const glob = require('glob');
 
-const targetPath = 'c:/Users/issam/Desktop/rise/riseconfireme/src/**/*.{js,jsx}';
+const targetPath = 'c:/Users/issam/Desktop/rise/RiseConfirm/src/**/*.{js,jsx}';
 const files = glob.sync(targetPath);
 
 files.forEach(file => {
@@ -9,14 +9,14 @@ files.forEach(file => {
     let changed = false;
     
     // Replace Arabic transliteration again (just in case)
-    if (content.includes('riseconfireme')) {
-        content = content.replace(/riseconfireme/g, 'riseconfireme');
+    if (content.includes('RiseConfirm')) {
+        content = content.replace(/RiseConfirm/g, 'RiseConfirm');
         changed = true;
     }
     
     // Replace English brand name
-    if (content.includes('riseconfireme')) {
-        content = content.replace(/riseconfireme/g, 'riseconfireme');
+    if (content.includes('RiseConfirm')) {
+        content = content.replace(/RiseConfirm/g, 'RiseConfirm');
         changed = true;
     }
 

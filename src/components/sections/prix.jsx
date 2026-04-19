@@ -74,7 +74,7 @@ const Pricing = () => {
                         <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                         <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-none">{t('Tarification Transparente')}</span>
                     </div>
-                    <h2 className="text-3xl lg:text-5xl font-extrabold text-heading dark:text-white leading-tight animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                    <h2 className="text-4xl lg:text-6xl font-black text-heading dark:text-white leading-[1.1] tracking-tight animate-slide-up">
                         {t('Payez à la')} <span className="text-primary italic">{t('performance.')}</span>
                     </h2>
                     <p className="text-lg text-body dark:text-slate-400 leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
@@ -190,7 +190,7 @@ const RoiCalculator = () => {
     const lostShipping = totalReturns * 600; // Assume 600 DA average shipping cost
     const totalLoss = lostRevenue + lostShipping;
 
-    // riseconfireme Recovery Calculations (Assume 30% of returns are recovered)
+    // RiseConfirm Recovery Calculations (Assume 30% of returns are recovered)
     const recoveredOrders = Math.round(totalReturns * 0.30);
     const recoveredRevenue = recoveredOrders * avgOrderValue;
     const recoveredShipping = recoveredOrders * 600;
@@ -283,7 +283,7 @@ const RoiCalculator = () => {
                     <div className="bg-emerald-50/50 dark:bg-emerald-900/10 rounded-[32px] p-6 lg:p-8 border border-emerald-100 dark:border-emerald-800/30 flex flex-col justify-center text-start">
                         <h4 className="text-[11px] font-black text-emerald-500 dark:text-emerald-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                             {t('Récupéré via riseconfireme')}
+                             {t('Récupéré via RiseConfirm')}
                         </h4>
                         
                         <div className="space-y-4 mb-6">

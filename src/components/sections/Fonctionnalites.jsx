@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Logo from '../ui/Logo';
 
@@ -116,7 +116,7 @@ const Features = () => {
                                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                                 <Logo showText={false} iconClassName="w-5 h-5" />
                                             </div>
-                                            <div className="text-xs font-bold text-heading">riseconfireme AI</div>
+                                            <div className="text-xs font-bold text-heading">RiseConfirm AI</div>
                                         </div>
                                         <div className="flex-1 p-4 space-y-4 overflow-y-auto bg-[#e5ddd5]">
                                             <div className="max-w-[80%] bg-white p-3 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none text-[11px] shadow-sm">

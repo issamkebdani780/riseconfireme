@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Problem = () => {
@@ -21,13 +21,13 @@ const Problem = () => {
                 {/* Comparison Grid */}
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch max-w-7xl mx-auto">
 
-                    {/* Card: Sans riseconfireme */}
+                    {/* Card: Sans RiseConfirm */}
                     <div className="group relative bg-white dark:bg-slate-900/50 rounded-[40px] p-8 lg:p-14 border border-slate-100 dark:border-slate-800 animate-slide-up" style={{ animationDelay: '0.2s' }}>
                         <div className="flex items-center gap-3 mb-10 opacity-60">
                             <div className="w-10 h-10 bg-slate-200 dark:bg-slate-800 rounded-xl flex items-center justify-center">
                                 <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                             </div>
-                            <h3 className="text-xl font-extrabold text-slate-500 dark:text-slate-400">{t('Sans riseconfireme')}</h3>
+                            <h3 className="text-xl font-extrabold text-slate-500 dark:text-slate-400">{t('Sans RiseConfirm')}</h3>
                         </div>
 
                         <div className="space-y-6">
@@ -58,7 +58,7 @@ const Problem = () => {
                         </div>
                     </div>
 
-                    {/* Card: Avec riseconfireme */}
+                    {/* Card: Avec RiseConfirm */}
                     <div className="group relative bg-white dark:bg-slate-900 rounded-[40px] p-8 lg:p-14 border border-blue-50 dark:border-blue-900/30 animate-slide-up shadow-premium" style={{ animationDelay: '0.3s' }}>
                         <div className="absolute top-8 right-8 rtl:right-auto rtl:left-8 hidden sm:block">
                             <span className="px-4 py-1.5 bg-blue-100 dark:bg-blue-900 text-primary dark:text-blue-300 text-[10px] font-extrabold uppercase tracking-widest rounded-full border border-blue-200 dark:border-blue-800 shadow-sm">
@@ -70,7 +70,7 @@ const Problem = () => {
                             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
                                 <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                             </div>
-                            <h3 className="text-xl font-extrabold text-heading dark:text-white">{t('Avec riseconfireme')}</h3>
+                            <h3 className="text-xl font-extrabold text-heading dark:text-white">{t('Avec RiseConfirm')}</h3>
                         </div>
 
                         {/* Stats Floating Card */}

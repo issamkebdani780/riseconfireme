@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Logo from '../ui/Logo';
@@ -139,7 +139,7 @@ const Footer = () => {
                 {/* Footnotes */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                     <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                        &copy; {new Date().getFullYear()} riseconfireme. {t('Propulsé par RiseGroup Algérie.')}
+                        &copy; {new Date().getFullYear()} RiseConfirm. {t('Propulsé par RiseGroup Algérie.')}
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
                         <Link to="/mentions-legales" className="text-[11px] font-black text-slate-400 hover:text-primary dark:hover:text-primary-light transition-colors uppercase tracking-[0.1em]">{t('Mentions Légales')}</Link>

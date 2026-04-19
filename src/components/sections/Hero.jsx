@@ -27,6 +27,34 @@ const Hero = () => {
 
           {/* Left Content */}
           <div className="w-full lg:w-1/2 space-y-8">
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-4 animate-slide-up [animation-delay:0.1s]">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-full border border-emerald-100 dark:border-emerald-800/30">
+                <div className="flex items-center gap-2">
+                  <span className="text-[13px] font-bold text-emerald-600 dark:text-emerald-400">
+                    {t("hero_badge_orders")}
+                  </span>
+                  <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/10 rounded-full border border-blue-100 dark:border-blue-800/30">
+                <div className="flex items-center gap-2">
+                  <span className="text-[13px] font-bold text-blue-600 dark:text-blue-400">
+                    {t("hero_badge_africa")}
+                  </span>
+                  <div className="w-6 h-6 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Heading */}
             <div className="space-y-6">
               <h1 className="text-4xl lg:text-6xl font-extrabold leading-tight lg:leading-[1.1] text-heading dark:text-white animate-slide-up" style={{ animationDelay: '0.2s' }}>
@@ -84,7 +112,7 @@ const Hero = () => {
               <img
                 src="/centredappel.jpg"
                 alt="Agent confirmant une commande par appel"
-                className="w-full h-[520px] object-cover sm:h-[600px]"
+                className="w-full aspect-[4/5] sm:aspect-auto sm:h-[600px] object-cover"
               />
             </div>
             <div className="absolute -top-10 left-6 lg:left-10 rtl:left-auto rtl:right-6 rtl:lg:right-10 animate-float-delayed">

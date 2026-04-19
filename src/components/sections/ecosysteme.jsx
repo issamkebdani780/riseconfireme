@@ -1,10 +1,10 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Ecosystem = () => {
     const { t } = useTranslation();
     const modules = [
-        { name: "riseconfireme", desc: t("Le Cœur de la Confirmation"), active: true, color: "bg-primary", icon: <img src="/ecosystem/riseconfirem.jpg" alt="riseconfireme" className="w-full h-full object-cover rounded-[20px]" /> },
+        { name: "RiseConfirm", desc: t("Le Cœur de la Confirmation"), active: true, color: "bg-primary", icon: <img src="/ecosystem/riseconfirem.jpg" alt="RiseConfirm" className="w-full h-full object-cover rounded-[20px]" /> },
         { name: "RiseManager", desc: t("Le Cerveau Opérationnel"), active: false, color: "bg-blue-500", icon: <img src="/ecosystem/risemanager.png" alt="RiseManager" className="w-full h-full object-cover rounded-[20px] bg-white" /> },
         { name: "RiseCart", desc: t("Storefront & Conversion"), active: false, color: "bg-emerald-500", icon: <img src="/ecosystem/risecart.jpg" alt="RiseCart" className="w-full h-full object-cover rounded-[20px]" /> },
         { name: "FBR", desc: t("Logistique & Stockage"), active: false, color: "bg-rose-500", icon: <img src="/ecosystem/fbr.jpg" alt="FBR" className="w-full h-full object-cover rounded-[20px]" /> },

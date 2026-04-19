@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 const Logo = ({ 
   iconClassName = "w-8 h-8", 
@@ -10,10 +10,10 @@ const Logo = ({
     <div className={className}>
       <img 
         src="/ecosystem/riseconfirem.jpg" 
-        alt="riseconfireme Logo" 
+        alt="RiseConfirm Logo" 
         className={`${iconClassName} object-cover rounded-[8px]`} 
       />
-      {showText && <span className={textClassName}>riseconfireme</span>}
+      {showText && <span className={textClassName}>RiseConfirm</span>}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Outfit:wght@100..900&display=swap');
 
 @variant dark (&:where(.dark, .dark *));
 
@@ -8,7 +9,8 @@
   --color-heading: #0f172a;
   --color-body: #475569;
   
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit", "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Cairo", ui-sans-serif, system-ui, sans-serif;
   
   --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -32,6 +34,37 @@
     @apply text-heading font-bold tracking-tight;
   }
 }
+
+/* Arabic font overrides — Cairo Black (900) for headings */
+[dir="rtl"],
+[lang="ar"] {
+  --font-sans: "Cairo", "Outfit", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Cairo", ui-sans-serif, system-ui, sans-serif;
+}
+
+[dir="rtl"] *,
+[lang="ar"] * {
+  font-family: "Cairo", ui-sans-serif, system-ui, sans-serif;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+  font-family: "Cairo", ui-sans-serif, system-ui, sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+}
+
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
@@ -98,5 +131,22 @@
   @keyframes bounceSubtle {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
+  }
+
+  /* RTL Helpers */
+  [dir="rtl"] {
+    .ltr-only { display: none; }
+    .rtl-only { display: block; }
+    
+    text-align: right;
+    
+    .flex, .grid {
+      text-align: right;
+    }
+  }
+
+  [dir="ltr"] {
+    .ltr-only { display: block; }
+    .rtl-only { display: none; }
   }
 }

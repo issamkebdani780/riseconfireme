@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 
 // Inline SVG icon components — no lucide-react dependency
 const Send = ({ className }) => (
@@ -78,7 +78,7 @@ const ChatBot = () => {
       setMessages([
         {
           role: "assistant",
-          content: "Salam ! 👋 Je suis l'assistant riseconfireme. Je peux vous expliquer comment notre call center spécialisé peut faire exploser votre taux de livraison et réduire vos retours. Que souhaitez-vous savoir ?"
+          content: "Salam ! 👋 Je suis l'assistant RiseConfirm. Je peux vous expliquer comment notre call center spécialisé peut faire exploser votre taux de livraison et réduire vos retours. Que souhaitez-vous savoir ?"
         }
       ]);
     }
@@ -100,11 +100,11 @@ const ChatBot = () => {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `Tu es l'assistant concierge intelligent de riseconfireme.
+      const systemPrompt = `Tu es l'assistant concierge intelligent de RiseConfirm.
       
       TON RÔLE :
       - Tu es un expert en confirmation de commandes COD (Cash On Delivery) et service client e-commerce en Afrique.
-      - Tu aides les marchands à comprendre comment riseconfireme réduit les retours et augmente le panier moyen (Upsell/Cross-sell).
+      - Tu aides les marchands à comprendre comment RiseConfirm réduit les retours et augmente le panier moyen (Upsell/Cross-sell).
       - Tu es proactif, digne de confiance et toujours encourageant.
       - Ton ton est professionnel, persuasif, et amical.
 
@@ -112,7 +112,7 @@ const ChatBot = () => {
       ${context}
 
       CONSIGNES :
-      1. Si l'utilisateur parle de retours ou de commandes annulées, explique la relance et l'expertise téléphonique de riseconfireme.
+      1. Si l'utilisateur parle de retours ou de commandes annulées, explique la relance et l'expertise téléphonique de RiseConfirm.
       2. Toujours encourager à démarrer gratuitement.
       3. Réponds en Français par défaut, mais si l'utilisateur parle en Arabe (Darja ou Classique), réponds en Arabe de la même façon.
       4. Ne pas inventer de prix exacts, dire que nos offres s'adaptent au volume et inviter à nous contacter.
@@ -123,7 +123,7 @@ const ChatBot = () => {
         headers: {
           "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
           "HTTP-Referer": window.location.origin,
-          "X-Title": "riseconfireme AI Concierge",
+          "X-Title": "RiseConfirm AI Concierge",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -160,7 +160,7 @@ const ChatBot = () => {
     if (window.confirm("Voulez-vous réinitialiser la discussion ?")) {
       setMessages([{
         role: "assistant",
-        content: "Salam ! 👋 Je suis l'assistant riseconfireme. Comment puis-je aider votre e-commerce aujourd'hui ?"
+        content: "Salam ! 👋 Je suis l'assistant RiseConfirm. Comment puis-je aider votre e-commerce aujourd'hui ?"
       }]);
       localStorage.removeItem('riseconfirm_chat_history');
     }

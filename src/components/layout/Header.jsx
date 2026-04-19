@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DropDown from '../ui/DropDown';
 import Logo from '../ui/Logo';
 
 const Header = () => {
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,7 +51,6 @@ const Header = () => {
   ];
 
   const ecoItems = [
-    { title: t("riseconfireme"), description: t("Le Cœur de la Confirmation"), icon: <img src="/ecosystem/riseconfirem.jpg" alt="riseconfireme" className="w-full h-full rounded-xl object-cover" /> },
     { title: t("RiseManager"), description: t("Gestion e-commerce globale"), icon: <img src="/ecosystem/risemanager.png" alt="RiseManager" className="w-full h-full rounded-xl object-cover bg-white" /> },
     { title: t("RiseCart"), description: t("Checkout optimisé pour le COD"), icon: <img src="/ecosystem/risecart.jpg" alt="RiseCart" className="w-full h-full rounded-xl object-cover" /> },
     { title: t("FBR"), description: t("Logistique et stockage"), icon: <img src="/ecosystem/fbr.jpg" alt="FBR" className="w-full h-full rounded-xl object-cover" /> },
@@ -78,24 +78,26 @@ const Header = () => {
             }`}
         >
           {/* Logo */}
-          <Logo 
-            className="flex items-center gap-2 shrink-0 cursor-pointer"
-            iconClassName="w-8 h-8 lg:w-9 lg:h-9"
-            textClassName="text-xl lg:text-2xl font-black text-heading dark:text-white tracking-tight"
-          />
+          <Link to="/">
+            <Logo 
+              className="flex items-center gap-2 shrink-0 cursor-pointer"
+              iconClassName="w-8 h-8 lg:w-9 lg:h-9"
+              textClassName="text-xl lg:text-2xl font-black text-heading dark:text-white tracking-tight"
+            />
+          </Link>
 
           {/* Navigation - Desktop */}
           <nav className="hidden lg:flex items-center gap-6">
-            <NavLink to="/">{t("Accueil")}</NavLink>
+            <NavLink to="/" active={location.pathname === "/"}>{t("Accueil")}</NavLink>
             <DropDown title={t("Solutions")} items={featuresItems} columns={2} />
             <DropDown title={t("Écosystème")} items={ecoItems} columns={1} />
             {/* <NavLink to="/#tarifs">Tarifs</NavLink> */}
-            <NavLink to="/blog">{t("Blog")}</NavLink>
-            <NavLink to="/espace-client">{t("Espace Client")}</NavLink>
+            <NavLink to="/blog" active={location.pathname === "/blog" || location.pathname.startsWith('/blog/')}>{t("Blog")}</NavLink>
+            <NavLink to="/espace-client" active={location.pathname === "/espace-client"}>{t("Espace Client")}</NavLink>
           </nav>
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Language Switcher */}
-            <div className="relative group/lang">
+            <div className="hidden sm:block relative group/lang">
               <button className="flex items-center gap-1.5 px-4 py-2 bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-100 dark:border-slate-800 hover:bg-slate-100 transition-all active:scale-95 group">
                 <svg className="w-3 h-3 text-slate-400 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
                 <span className="text-[11px] font-black tracking-widest text-[#0091ff] uppercase">{i18n.language === 'ar' ? 'ar' : i18n.language}</span>
@@ -166,19 +168,34 @@ const Header = () => {
               </svg>
             </button>
 
-            <div className="flex flex-col items-center gap-3 mb-10">
+            <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex flex-col items-center gap-3 mb-10">
               <Logo showText={false} iconClassName="w-12 h-12" />
-              <span className="text-xl font-black text-heading dark:text-white">riseconfireme</span>
-            </div>
+              <span className="text-xl font-black text-heading dark:text-white">RiseConfirm</span>
+            </Link>
 
             <nav className="flex flex-col gap-6 mb-10">
-              <MobileNavLink to="/" active onClick={() => setIsMenuOpen(false)}>{t("Accueil")}</MobileNavLink>
+              <MobileNavLink to="/" active={location.pathname === "/"} onClick={() => setIsMenuOpen(false)}>{t("Accueil")}</MobileNavLink>
               <MobileNavLink to="/#features" onClick={() => setIsMenuOpen(false)}>{t("Solutions")}</MobileNavLink>
-              <MobileNavLink to="/#tarifs" onClick={() => setIsMenuOpen(false)}>{t("Tarifs")}</MobileNavLink>
-              <MobileNavLink to="/blog" onClick={() => setIsMenuOpen(false)}>{t("Blog")}</MobileNavLink>
-              <MobileNavLink to="/espace-client" onClick={() => setIsMenuOpen(false)}>{t("Espace Client")}</MobileNavLink>
+              <MobileNavLink to="/tarifs" active={location.pathname === "/tarifs"} onClick={() => setIsMenuOpen(false)}>{t("Tarifs")}</MobileNavLink>
+              <MobileNavLink to="/blog" active={location.pathname === "/blog" || location.pathname.startsWith('/blog/')} onClick={() => setIsMenuOpen(false)}>{t("Blog")}</MobileNavLink>
+              <MobileNavLink to="/espace-client" active={location.pathname === "/espace-client"} onClick={() => setIsMenuOpen(false)}>{t("Espace Client")}</MobileNavLink>
               <MobileNavLink to="/#faq" onClick={() => setIsMenuOpen(false)}>{t("FAQ")}</MobileNavLink>
               <MobileNavLink to="/#contact" onClick={() => setIsMenuOpen(false)}>{t("Contact")}</MobileNavLink>
+              
+              <div className="flex items-center justify-center gap-4 pt-6 mt-6 border-t border-slate-50 dark:border-slate-800">
+                {languages.map((lang) => (
+                  <button 
+                    key={lang.code}
+                    onClick={() => {
+                      changeLanguage(lang.code);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${i18n.language === lang.code ? 'bg-primary text-white' : 'text-slate-400 hover:text-primary'}`}
+                  >
+                    {lang.code.toUpperCase()}
+                  </button>
+                ))}
+              </div>
             </nav>
 
             <div className="flex flex-col gap-3">
@@ -196,14 +213,21 @@ const Header = () => {
   );
 };
 
-const NavLink = ({ to, children }) => (
-  <Link to={to} className="text-[13px] font-bold text-slate-400 dark:text-slate-500 transition-colors hover:text-primary">
+const NavLink = ({ to, children, active = false }) => (
+  <Link 
+    to={to} 
+    className={`text-[13px] font-bold transition-colors hover:text-primary ${active ? 'text-primary' : 'text-slate-400 dark:text-slate-500'}`}
+  >
     {children}
   </Link>
 );
 
-const MobileNavLink = ({ to, children, onClick }) => (
-  <Link to={to} onClick={onClick} className="text-sm font-bold text-slate-500 transition-colors hover:text-primary">
+const MobileNavLink = ({ to, children, active = false, onClick }) => (
+  <Link 
+    to={to} 
+    onClick={onClick} 
+    className={`text-sm font-bold transition-colors hover:text-primary ${active ? 'text-primary' : 'text-slate-500'}`}
+  >
     {children}
   </Link>
 );

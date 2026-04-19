@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const A_propos = () => {
@@ -65,7 +65,7 @@ const A_propos = () => {
                         <div className="relative z-10 rounded-[48px] overflow-hidden aspect-[4/5] bg-slate-100 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-primary/30">
                              <img 
                                  src="/centredappel2.jpg" 
-                                 alt="L'équipe riseconfireme en action" 
+                                 alt="L'équipe RiseConfirm en action" 
                                  className="absolute inset-0 w-full h-full transition-transform duration-1000 group-hover:scale-105" 
                              />
                              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/10 to-transparent transition-opacity duration-700 group-hover:opacity-60" />
