@@ -9,7 +9,7 @@ const Logo = ({
   return (
     <div className={className}>
       <img 
-        src="/ecosystem/riseconfirem.jpg" 
+        src="/ecosystem/RiseConfirm.jpg" 
         alt="RiseConfirm Logo" 
         className={`${iconClassName} object-cover rounded-[8px]`} 
       />

@@ -10,12 +10,16 @@ function walk(dir) {
         } else if (file.endsWith('.js') || file.endsWith('.jsx')) {
             let content = fs.readFileSync(fullPath, 'utf8');
             let changed = false;
-            if (content.includes('ريز كونفيرم')) {
-                content = content.replace(/ريز كونفيرم/g, 'riseconfireme');
+            if (content.includes('RiseConfirm')) {
+                content = content.replace(/RiseConfirm/g, 'RiseConfirm');
                 changed = true;
             }
-            if (content.includes('RiseConfirm')) {
-                content = content.replace(/RiseConfirm/g, 'riseconfireme');
+            if (content.includes('riseconfirem')) {
+                content = content.replace(/riseconfirem/g, 'RiseConfirm');
+                changed = true;
+            }
+            if (content.includes('ريز كونفيرم')) {
+                content = content.replace(/ريز كونفيرم/g, 'RiseConfirm');
                 changed = true;
             }
             if (changed) {
@@ -26,5 +30,5 @@ function walk(dir) {
     });
 }
 
-walk('c:/Users/issam/Desktop/rise/riseconfireme/src');
+walk('c:/Users/issam/Desktop/rise/RiseConfirm/src');
 console.log('Replacement complete.');
