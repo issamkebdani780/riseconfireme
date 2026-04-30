@@ -1,38 +1,46 @@
-export const setAuthData = (response, fallbackName = '') => {
-  if (!response) return;
+const TOKEN_KEY = 'rise_confirm_token';
+const USER_KEY = 'rise_confirm_user';
 
-  // Extract and save token
-  const token = response.token || response.access_token || response.bearer_token;
-  if (token) {
-    localStorage.setItem('token', token);
+export const setAuthData = (data, identifier) => {
+  if (data.accessToken) {
+    localStorage.setItem(TOKEN_KEY, data.accessToken);
   }
-
-  // Extract and save user name
-  let nameToSave = fallbackName;
-  if (response.user && response.user.firstName) {
-    nameToSave = `${response.user.firstName} ${response.user.lastName || ''}`.trim();
+  if (data.agent) {
+    localStorage.setItem(USER_KEY, JSON.stringify(data.agent));
+  } else if (identifier) {
+    localStorage.setItem('userName', identifier);
   }
   
-  if (nameToSave) {
-    localStorage.setItem('userName', nameToSave);
+  if (data.agent) {
+    localStorage.setItem('userName', `${data.agent.firstName} ${data.agent.lastName}`);
+  } else if (identifier) {
+    localStorage.setItem('userName', identifier);
   }
+};
+
+export const getToken = () => {
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+export const getUser = () => {
+  const user = localStorage.getItem(USER_KEY);
+  return user ? JSON.parse(user) : null;
 };
 
 export const clearAuthData = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-  }
-};
-
-export const getAuthToken = () => {
-  return typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-};
-
-export const getUserName = () => {
-  return typeof window !== 'undefined' ? localStorage.getItem('userName') : null;
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem('userName');
 };
 
 export const isAuthenticated = () => {
-  return !!getUserName() || !!getAuthToken();
+  return !!localStorage.getItem(TOKEN_KEY);
+};
+
+export const authUtils = {
+  setAuthData,
+  getToken,
+  getUser,
+  clearAuthData,
+  isAuthenticated
 };

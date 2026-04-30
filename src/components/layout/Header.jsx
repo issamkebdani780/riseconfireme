@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DropDown from '../ui/DropDown';
 import Logo from '../ui/Logo';
+import { isAuthenticated } from '../../utils/auth';
 
 const Header = () => {
   const location = useLocation();
@@ -12,11 +13,8 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const user = localStorage.getItem('userName');
-      setIsLoggedIn(!!user);
-    }
-  }, []);
+    setIsLoggedIn(isAuthenticated());
+  }, [location.pathname]);
 
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {

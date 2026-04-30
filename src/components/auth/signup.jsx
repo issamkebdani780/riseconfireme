@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Logo from '../ui/Logo';
 import { clientServices } from '../../services/clientServices';
 import { useToast } from '../ui/toast';
-import { setAuthData } from '../../utils/auth';
+import { setAuthData, isAuthenticated } from '../../utils/auth';
 
 export default function SignUp() {
   const { t, i18n } = useTranslation();
@@ -20,6 +20,12 @@ export default function SignUp() {
     confirmPassword: '' 
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (isAuthenticated()) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -120,12 +126,15 @@ export default function SignUp() {
 
             setIsLoading(true);
             try {
+              console.log('Attempting signup for:', formData.email);
               const { confirmPassword, ...payload } = formData;
               const res = await clientServices.signUp(payload);
+              console.log('Signup response received:', res);
               
               setAuthData(res, `${formData.firstName} ${formData.lastName}`);
 
               addToast(t('auth.signup.success', 'Inscription réussie ! Bienvenue.'), 'success');
+              console.log('Redirecting to dashboard...');
               navigate('/dashboard');
             } catch (err) {
               const errorMessage = err.message || "Une erreur est survenue lors de l'inscription.";

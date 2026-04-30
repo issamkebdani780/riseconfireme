@@ -1,13 +1,11 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { isAuthenticated } from '../../utils/auth';
 
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
-  
-  // Verify authentication by checking for the user's token or profile
-  const isAuthenticated = !!localStorage.getItem('userName') || !!localStorage.getItem('token');
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated()) {
     // Redirect to the login page, but save the current location they were trying to access
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
