@@ -883,7 +883,19 @@ const resources = {
       "Étudier": "Study",
       "Problème": "Problem",
       "Solution": "Solution",
-      "Gain Direct": "Direct Gain"
+      "Gain Direct": "Direct Gain",
+      "bot_welcome": "Hello ! 👋 I'm the RiseConfirm assistant. I can explain how our specialized call center can skyrocket your delivery rate and reduce your returns. What would you like to know?",
+      "bot_error": "Sorry, I'm experiencing a slight technical difficulty. You can contact us directly via WhatsApp or try again later.",
+      "bot_reset_confirm": "Do you want to reset the discussion?",
+      "bot_welcome_reset": "Hello ! 👋 I'm the RiseConfirm assistant. How can I help your e-commerce today?",
+      "bot_ai_expert": "AI Expert Online",
+      "bot_reset": "Reset",
+      "bot_action_1": "Reduce my returns",
+      "bot_action_2": "How do you confirm?",
+      "bot_action_3": "Upsell, how does it work?",
+      "bot_action_4": "Your pricing",
+      "bot_placeholder": "Ask your question...",
+      "bot_footer": "Rise Artificial Intelligence v1.0"
     }
   },
   ar: {
@@ -1090,7 +1102,7 @@ const resources = {
       "Des réponses pour lever": "إجابات لتبديد",
       "vos doutes.": "شكوكك.",
       "faq_q1": "كيف ترتبط RiseConfirm بمتجري؟",
-      "faq_a1": "لدينا تكاملات أصلية لـ Shopify و WooCommerce ونظام Rise البيئي. بالنسبة للمنصات الأخرى، نستخدم واجهة برمجة التطبيقات (API) الخاصة بنا أو الويب هوك. يستغرق التثبيت عادةً أقل من 10 دقائق.",
+      "faq_a1": "لدينا تكاملات أصلية لـ Shopify و WooCommerce ونظام Rise . بالنسبة للمنصات الأخرى، نستخدم واجهة برمجة التطبيقات (API) الخاصة بنا أو الويب هوك. يستغرق التثبيت عادةً أقل من 10 دقائق.",
       "faq_q2": "هل تقدمون وكلاء يتحدثون عدة لغات؟",
       "faq_a2": "نعم، جميع وكلائنا يتقنون اللغة العربية (الدارجة والفصحى) والفرنسية. هم مدربون على التكيف مع نوعية عملائك لتحقيق أقصى قدر من القرب.",
       "faq_q3": "هل هناك حد أدنى للطلبيات في اليوم؟",
@@ -1266,11 +1278,11 @@ const resources = {
       "Agents certifiés COD": "وكلاء معتمدون للدفع عند الاستلام",
       "Support local 7j/7": "دعم محلي طوال الأسبوع",
       "Essai sans engagement": "تجربة بدون التزام",
-      "L'ÉCOSYSTÈME RISE": "نظام ريز البيئي",
+      "L'ÉCOSYSTÈME RISE": "نظام Rise ",
       "Bien plus qu'un service :": "أكثر من مجرد خدمة:",
       "infrastructure": "بنية تحتية",
       "globale.": "عالمية.",
-      "eco_desc": "يتكامل RiseConfirm تماماً مع نظام ريز البيئي لتغطية 100٪ من احتياجات أعمال التجارة الإلكترونية الخاصة بك.",
+      "eco_desc": "يتكامل RiseConfirm تماماً مع نظام ريز  لتغطية 100٪ من احتياجات أعمال التجارة الإلكترونية الخاصة بك.",
       "Le Cerveau Opérationnel": "العقل التشغيلي",
       "Storefront & Conversion": "المتجر والتحويل",
       "Logistique & Stockage": "الخدمات اللوجستية والتخزين",
@@ -1366,7 +1378,19 @@ const resources = {
       "Service": "الخدمة",
       "Comment ça marche": "كيف يعمل",
       "Fonctionnalités": "المميزات",
-      "Tarifs": "الأسعار"
+      "Tarifs": "الأسعار",
+      "bot_welcome": "مرحباً ! 👋 أنا المساعد الآلي لـ RiseConfirm. يمكنني أن أشرح لك كيف يمكن لمركز الاتصال المتخصص لدينا زيادة معدل التوصيل وتقليل المرتجعات. ماذا تريد أن تعرف؟",
+      "bot_error": "عذراً، أواجه مشكلة فنية بسيطة. يمكنك الاتصال بنا مباشرة عبر واتساب أو المحاولة مرة أخرى لاحقاً.",
+      "bot_reset_confirm": "هل تريد إعادة تعيين المحادثة؟",
+      "bot_welcome_reset": "مرحباً ! 👋 أنا المساعد الآلي لـ RiseConfirm. كيف يمكنني مساعدة متجرك الإلكتروني اليوم؟",
+      "bot_ai_expert": "خبير ذكاء اصطناعي متصل",
+      "bot_reset": "إعادة تعيين",
+      "bot_action_1": "تقليل المرتجعات",
+      "bot_action_2": "كيف تقومون بالتأكيد؟",
+      "bot_action_3": "البيع الإضافي، كيف يعمل؟",
+      "bot_action_4": "أسعاركم",
+      "bot_placeholder": "اطرح سؤالك...",
+      "bot_footer": "الذكاء الاصطناعي لـ Rise الإصدار 1.0"
     }
   }
 };

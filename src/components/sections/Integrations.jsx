@@ -22,9 +22,9 @@ const Integrations = () => {
     return (
         <section className="py-24 lg:py-40 bg-[#f8fbff] dark:bg-slate-950 transition-colors duration-500 overflow-hidden" id="integrations">
             <div className="container mx-auto px-4 sm:px-6">
-                
+
                 <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32 max-w-7xl mx-auto">
-                    
+
                     {/* Left: Content */}
                     <div className="w-full lg:w-1/2 space-y-8 text-center lg:text-start">
                         <div className="space-y-4">
@@ -54,7 +54,7 @@ const Integrations = () => {
                                 </div>
                             ))}
                         </div>
-                        
+
                         <div className="pt-6">
                             <button className="px-8 py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-xl active:scale-95 flex items-center gap-3 mx-auto lg:mx-0">
                                 {t('Voir la documentation API')}
@@ -67,10 +67,10 @@ const Integrations = () => {
                         <div className="grid grid-cols-2 gap-4 lg:gap-6 relative">
                             {/* Decorative Blur */}
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/10 blur-[100px] pointer-events-none rounded-full" />
-                            
+
                             {integrations.map((item, i) => (
-                                <div 
-                                    key={i} 
+                                <div
+                                    key={i}
                                     className={`bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-none hover:shadow-2xl hover:border-slate-200 dark:hover:border-slate-700 transition-all duration-500 group relative overflow-hidden flex flex-col items-center text-center space-y-5 animate-slide-up bg-gradient-to-b from-transparent to-slate-50/50 dark:to-slate-800/20`}
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >

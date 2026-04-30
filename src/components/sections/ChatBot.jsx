@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Inline SVG icon components — no lucide-react dependency
 const Send = ({ className }) => (
@@ -38,6 +39,7 @@ const Sparkles = ({ className }) => (
 );
 
 const ChatBot = () => {
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -68,25 +70,34 @@ const ChatBot = () => {
     
     BUSINESS GOALS:
     - Conversion : Encourager l'utilisateur à créer un compte "Démarrer gratuitement".
+
+    - use the same language of user
   `;
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('riseconfirm_chat_history');
-    if (savedHistory) {
-      setMessages(JSON.parse(savedHistory));
+    const parsedHistory = savedHistory ? JSON.parse(savedHistory) : null;
+    
+    // Only load history if there is an actual conversation (more than just the welcome message)
+    if (parsedHistory && parsedHistory.length > 1) {
+      setMessages(parsedHistory);
     } else {
       setMessages([
         {
           role: "assistant",
-          content: "Salam ! 👋 Je suis l'assistant RiseConfirm. Je peux vous expliquer comment notre call center spécialisé peut faire exploser votre taux de livraison et réduire vos retours. Que souhaitez-vous savoir ?"
+          content: t("bot_welcome", "Salam ! 👋 Je suis l'assistant RiseConfirm. Je peux vous expliquer comment notre call center spécialisé peut faire exploser votre taux de livraison et réduire vos retours. Que souhaitez-vous savoir ?")
         }
       ]);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
-    if (messages.length > 0) {
+    // Only save to localStorage if a real conversation has started
+    if (messages.length > 1) {
       localStorage.setItem('riseconfirm_chat_history', JSON.stringify(messages));
+    } else if (messages.length === 1) {
+      // Clear storage if it's just the welcome message
+      localStorage.removeItem('riseconfirm_chat_history');
     }
   }, [messages]);
 
@@ -114,7 +125,7 @@ const ChatBot = () => {
       CONSIGNES :
       1. Si l'utilisateur parle de retours ou de commandes annulées, explique la relance et l'expertise téléphonique de RiseConfirm.
       2. Toujours encourager à démarrer gratuitement.
-      3. Réponds en Français par défaut, mais si l'utilisateur parle en Arabe (Darja ou Classique), réponds en Arabe de la même façon.
+      3. Réponds de préférence dans la langue "${i18n.language}" (fr, en, ou ar), mais adapte-toi si l'utilisateur parle dans une autre langue.
       4. Ne pas inventer de prix exacts, dire que nos offres s'adaptent au volume et inviter à nous contacter.
       `;
 
@@ -149,7 +160,7 @@ const ChatBot = () => {
       console.error("Error calling AI:", error);
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: "Désolé, je rencontre une petite difficulté technique. Vous pouvez nous contacter directement par WhatsApp ou réessayer plus tard."
+        content: t("bot_error", "Désolé, je rencontre une petite difficulté technique. Vous pouvez nous contacter directement par WhatsApp ou réessayer plus tard.")
       }]);
     } finally {
       setIsLoading(false);
@@ -157,17 +168,17 @@ const ChatBot = () => {
   };
 
   const handleClearHistory = () => {
-    if (window.confirm("Voulez-vous réinitialiser la discussion ?")) {
+    if (window.confirm(t("bot_reset_confirm", "Voulez-vous réinitialiser la discussion ?"))) {
       setMessages([{
         role: "assistant",
-        content: "Salam ! 👋 Je suis l'assistant RiseConfirm. Comment puis-je aider votre e-commerce aujourd'hui ?"
+        content: t("bot_welcome_reset", "Salam ! 👋 Je suis l'assistant RiseConfirm. Comment puis-je aider votre e-commerce aujourd'hui ?")
       }]);
       localStorage.removeItem('riseconfirm_chat_history');
     }
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans flex flex-col items-end">
+    <div className="fixed bottom-6 ltr:right-6 rtl:left-6 z-[9999] font-sans flex flex-col items-end">
       {/* Chat Toggle Button */}
       {!isOpen && (
         <button
@@ -175,7 +186,7 @@ const ChatBot = () => {
           className="size-16 cursor-pointer rounded-2xl bg-[#0091ff] text-white shadow-[0_20px_40px_-10px_rgba(0,145,255,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all group overflow-hidden"
         >
           <MessageCircle className="size-8 relative z-10" />
-          <div className="absolute top-3 right-3 size-2.5 bg-emerald-400 border-2 border-[#0091ff] rounded-full animate-pulse"></div>
+          <div className="absolute top-3 ltr:right-3 rtl:left-3 size-2.5 bg-emerald-400 border-2 border-[#0091ff] rounded-full animate-pulse"></div>
         </button>
       )}
 
@@ -192,12 +203,12 @@ const ChatBot = () => {
                 <h3 className="font-black text-slate-900 dark:text-white text-sm uppercase tracking-wider">Rise Concierge</h3>
                 <div className="flex items-center gap-1.5">
                   <div className="size-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">AI Expert Online</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">{t("bot_ai_expert", "AI Expert Online")}</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <button onClick={handleClearHistory} className="p-2.5 text-slate-300 dark:text-slate-600 hover:text-red-500 transition-colors" title="Réinitialiser">
+              <button onClick={handleClearHistory} className="p-2.5 text-slate-300 dark:text-slate-600 hover:text-red-500 transition-colors" title={t("bot_reset", "Réinitialiser")}>
                 <Trash2 className="size-4" />
               </button>
               <button
@@ -251,10 +262,10 @@ const ChatBot = () => {
           {/* Quick Actions */}
           <div className="px-6 sm:px-8 bg-white dark:bg-slate-900 flex gap-2 overflow-x-auto no-scrollbar pb-2">
             {[
-              "Réduire mes retours",
-              "Comment vous confirmez ?",
-              "L'upsell, comment ça marche ?",
-              "Vos tarifs"
+              t("bot_action_1", "Réduire mes retours"),
+              t("bot_action_2", "Comment vous confirmez ?"),
+              t("bot_action_3", "L'upsell, comment ça marche ?"),
+              t("bot_action_4", "Vos tarifs")
             ].map((action, i) => (
               <button
                 key={i}
@@ -268,25 +279,25 @@ const ChatBot = () => {
 
           {/* Input */}
           <form onSubmit={handleSendMessage} className="p-6 sm:p-8 bg-white dark:bg-slate-900 border-t border-slate-50 dark:border-slate-800">
-            <div className="relative">
+            <div className="relative flex-1 rtl:pr-0 rtl:pl-14">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Posez votre question à Rise..."
+                placeholder={t("bot_placeholder", "Posez votre question à Rise...")}
                 disabled={isLoading}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-6 py-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-[#0091ff]/5 focus:border-[#0091ff]/50 transition-all pr-14"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-6 py-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-[#0091ff]/5 focus:border-[#0091ff]/50 transition-all ltr:pr-14 rtl:pl-14"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="absolute right-2 top-1/2 -translate-y-1/2 size-11 rounded-xl bg-[#0091ff] text-white flex items-center justify-center hover:bg-[#0077d4] shadow-lg shadow-[#0091ff]/20 transition-all disabled:opacity-50 active:scale-95"
+                className="absolute ltr:right-2 rtl:left-2 top-1/2 -translate-y-1/2 size-11 rounded-xl bg-[#0091ff] text-white flex items-center justify-center hover:bg-[#0077d4] shadow-lg shadow-[#0091ff]/20 transition-all disabled:opacity-50 active:scale-95 rtl:rotate-180"
               >
                 {isLoading ? <Loader2 className="size-5 animate-spin" /> : <Send className="size-5" />}
               </button>
             </div>
             <p className="text-[9px] text-center text-slate-300 dark:text-slate-600 font-bold uppercase tracking-[0.2em] mt-4">
-              Intelligence Artificielle Rise v1.0
+              {t("bot_footer", "Intelligence Artificielle Rise v1.0")}
             </p>
           </form>
         </div>

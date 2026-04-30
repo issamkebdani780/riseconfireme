@@ -17,7 +17,7 @@ const FinalCTA = () => {
                     <div className="relative w-full h-full bg-gradient-to-br from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950 rounded-[44px] p-10 lg:p-24 flex flex-col items-center text-center space-y-12 border border-slate-100 dark:border-slate-800 transition-colors duration-500">
                         
                         {/* Header Text */}
-                        <div className="max-w-3xl space-y-4">
+                        <div className="max-w-3xl space-y-4 text-center">
                             <h2 className="text-3xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight">
                                 {t('Transformez vos commandes en')} <br />
                                 <span className="text-primary italic">{t('ventes réelles.')}</span>

@@ -71,7 +71,7 @@ const Comment_ca_marche = () => {
     ];
 
     return (
-        <section className="py-24 lg:py-40 bg-white dark:bg-slate-950 transition-colors duration-500 overflow-hidden" id="process">
+        <section className="py-24 lg:py-40 bg-white dark:bg-slate-950 transition-colors duration-500 overflow-hidden" id="comment-ca-marche">
             <div className="container mx-auto px-4 sm:px-6">
                 {/* Header */}
                 <div className="max-w-3xl mx-auto text-center mb-24 space-y-6">
@@ -106,7 +106,7 @@ const Comment_ca_marche = () => {
                                         </div>
                                     </div>
 
-                                    <div className="space-y-3">
+                                    <div className="space-y-3  text-center">
                                         <h3 className="text-lg font-black text-heading dark:text-white group-hover:text-primary transition-colors">{step.title}</h3>
                                         <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
                                             {step.desc}
