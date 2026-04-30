@@ -9,6 +9,14 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const user = localStorage.getItem('userName');
+      setIsLoggedIn(!!user);
+    }
+  }, []);
 
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -136,13 +144,21 @@ const Header = () => {
               )}
             </button>
 
-            <Link to="/espace-client" className="hidden lg:inline-flex text-sm font-bold text-heading dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors border border-slate-100 dark:border-slate-800 px-5 py-2.5 rounded-full">
-              {t("Se connecter")}
-            </Link>
+            {isLoggedIn ? (
+              <Link to="/dashboard" className="hidden sm:inline-flex px-5 py-2.5 lg:px-6 lg:py-3 bg-primary hover:bg-primary-hover text-white text-xs lg:text-sm font-extrabold rounded-full transition-all active:scale-95 whitespace-nowrap shadow-lg shadow-primary/20 items-center justify-center">
+                {t("Tableau de bord")}
+              </Link>
+            ) : (
+              <>
+                <Link to="/signin" className="hidden lg:inline-flex text-sm font-bold text-heading dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors border border-slate-100 dark:border-slate-800 px-5 py-2.5 rounded-full">
+                  {t("Se connecter")}
+                </Link>
 
-            <Link to="/demande" className="hidden sm:inline-flex px-5 py-2.5 lg:px-6 lg:py-3 bg-primary hover:bg-primary-hover text-white text-xs lg:text-sm font-extrabold rounded-full transition-all active:scale-95 whitespace-nowrap shadow-lg shadow-primary/20 items-center justify-center">
-              {t("Démarrer gratuitement")}
-            </Link>
+                <Link to="/signup" className="hidden sm:inline-flex px-5 py-2.5 lg:px-6 lg:py-3 bg-primary hover:bg-primary-hover text-white text-xs lg:text-sm font-extrabold rounded-full transition-all active:scale-95 whitespace-nowrap shadow-lg shadow-primary/20 items-center justify-center">
+                  {t("Démarrer gratuitement")}
+                </Link>
+              </>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button
@@ -199,12 +215,20 @@ const Header = () => {
             </nav>
 
             <div className="flex flex-col gap-3">
-              <button className="w-full py-4 text-sm font-bold text-heading dark:text-white border border-slate-100 dark:border-slate-800 rounded-2xl">
-                {t("Se connecter")}
-              </button>
-              <button className="w-full py-4 bg-primary text-white text-sm font-bold rounded-2xl shadow-lg shadow-primary/20">
-                {t("Démarrer gratuitement")}
-              </button>
+              {isLoggedIn ? (
+                <Link to="/dashboard" onClick={() => setIsMenuOpen(false)} className="w-full flex justify-center py-4 bg-primary text-white text-sm font-bold rounded-2xl shadow-lg shadow-primary/20">
+                  {t("Tableau de bord")}
+                </Link>
+              ) : (
+                <>
+                  <Link to="/signin" onClick={() => setIsMenuOpen(false)} className="w-full flex justify-center py-4 text-sm font-bold text-heading dark:text-white border border-slate-100 dark:border-slate-800 rounded-2xl">
+                    {t("Se connecter")}
+                  </Link>
+                  <Link to="/signup" onClick={() => setIsMenuOpen(false)} className="w-full flex justify-center py-4 bg-primary text-white text-sm font-bold rounded-2xl shadow-lg shadow-primary/20">
+                    {t("Démarrer gratuitement")}
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

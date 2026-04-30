@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 // Inline SVG icon components — no lucide-react dependency
 const Send = ({ className }) => (
@@ -40,10 +41,14 @@ const Sparkles = ({ className }) => (
 
 const ChatBot = () => {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const hiddenRoutes = ['/signin', '/signup', '/dashboard'];
+  const isHidden = hiddenRoutes.some(route => location.pathname === route || location.pathname.startsWith(`${route}/`));
 
   const messagesEndRef = useRef(null);
 
@@ -176,6 +181,8 @@ const ChatBot = () => {
       localStorage.removeItem('riseconfirm_chat_history');
     }
   };
+
+  if (isHidden) return null;
 
   return (
     <div className="fixed bottom-6 ltr:right-6 rtl:left-6 z-[9999] font-sans flex flex-col items-end">

@@ -55,12 +55,10 @@ const Accueill = () => {
                 <Integrations />
                 <Pricing />
                 <APropos />
-                {/* <DemandeDeDemonstration /> */}
                 <Blog />
                 <Espace_Client />
                 <FAQ />
                 <DemandeDeDemonstration />
-                {/* <Contact /> */}
                 <FinalCTA />
             </main>
 
