@@ -38,7 +38,13 @@ export default function SignUp() {
   };
   
   const strength = Object.values(validations).filter(Boolean).length;
-  const strengthLabels = ['Faible', 'Moyen', 'Bon', 'Fort', 'Très fort'];
+  const strengthLabels = [
+    t('auth.strength.weak'), 
+    t('auth.strength.medium'), 
+    t('auth.strength.good'), 
+    t('auth.strength.strong'), 
+    t('auth.strength.veryStrong')
+  ];
   const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-emerald-400', 'bg-emerald-600'];
 
   return (
@@ -126,18 +132,15 @@ export default function SignUp() {
 
             setIsLoading(true);
             try {
-              console.log('Attempting signup for:', formData.email);
               const { confirmPassword, ...payload } = formData;
               const res = await clientServices.signUp(payload);
-              console.log('Signup response received:', res);
               
               setAuthData(res, `${formData.firstName} ${formData.lastName}`);
 
               addToast(t('auth.signup.success', 'Inscription réussie ! Bienvenue.'), 'success');
-              console.log('Redirecting to dashboard...');
               navigate('/dashboard');
             } catch (err) {
-              const errorMessage = err.message || "Une erreur est survenue lors de l'inscription.";
+              const errorMessage = err.message || t('auth.errors.general');
               addToast(errorMessage, 'error');
             } finally {
               setIsLoading(false);
@@ -146,7 +149,7 @@ export default function SignUp() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="firstName">
-                  {t('auth.firstName', 'Prénom')}
+                  {t('auth.firstName')}
                 </label>
                 <input
                   id="firstName"
@@ -155,14 +158,14 @@ export default function SignUp() {
                   autoComplete="given-name"
                   required
                   className="appearance-none block w-full px-5 py-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-heading dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  placeholder="Jean"
+                  placeholder={t('placeholder_firstName')}
                   value={formData.firstName}
                   onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="lastName">
-                  {t('auth.lastName', 'Nom')}
+                  {t('auth.lastName')}
                 </label>
                 <input
                   id="lastName"
@@ -171,7 +174,7 @@ export default function SignUp() {
                   autoComplete="family-name"
                   required
                   className="appearance-none block w-full px-5 py-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-heading dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  placeholder="Dupont"
+                  placeholder={t('placeholder_lastName')}
                   value={formData.lastName}
                   onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                 />
@@ -180,7 +183,7 @@ export default function SignUp() {
 
             <div>
               <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="email">
-                {t('auth.email', 'Adresse e-mail')}
+                {t('auth.email')}
               </label>
               <input
                 id="email"
@@ -189,7 +192,7 @@ export default function SignUp() {
                 autoComplete="email"
                 required
                 className="appearance-none block w-full px-5 py-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-heading dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="vous@exemple.com"
+                placeholder={t('placeholder_email')}
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />
@@ -197,7 +200,7 @@ export default function SignUp() {
 
             <div>
               <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="phone">
-                {t('auth.phone', 'Numéro de téléphone')}
+                {t('auth.phone')}
               </label>
               <input
                 id="phone"
@@ -214,7 +217,7 @@ export default function SignUp() {
 
             <div>
               <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="address">
-                {t('auth.address', 'Adresse')}
+                {t('auth.address')}
               </label>
               <input
                 id="address"
@@ -223,7 +226,7 @@ export default function SignUp() {
                 autoComplete="street-address"
                 required
                 className="appearance-none block w-full px-5 py-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-heading dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="Alger, Algérie"
+                placeholder={t('placeholder_address')}
                 value={formData.address}
                 onChange={(e) => setFormData({...formData, address: e.target.value})}
               />
@@ -232,7 +235,7 @@ export default function SignUp() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="password">
-                  {t('auth.password', 'Mot de passe')}
+                  {t('auth.password')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -263,7 +266,7 @@ export default function SignUp() {
 
               <div>
                 <label className="block text-sm font-medium text-heading dark:text-slate-300 mb-2" htmlFor="confirmPassword">
-                  {t('auth.confirmPassword', 'Confirmer le mot de passe')}
+                  {t('auth.confirmPassword')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -306,19 +309,19 @@ export default function SignUp() {
                   ))}
                 </div>
                 <div className="text-sm font-semibold" style={{ color: strength > 0 ? `var(--tw-color-${strengthColors[strength - 1]?.split('-')[1]}-600)` : '' }}>
-                  {strength > 0 && t('auth.passwordStrength', strengthLabels[strength - 1])}
+                  {strength > 0 && t('auth.passwordStrength', { strength: strengthLabels[strength - 1] })}
                 </div>
 
                 <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-                    {t('auth.passwordRequirements', 'Exigences du mot de passe')}
+                    {t('auth.passwordRequirements')}
                   </h4>
                   <ul className="space-y-2">
-                    <RequirementItem met={validations.length} text={t('auth.reqLength', 'Au moins 8 caractères')} />
-                    <RequirementItem met={validations.uppercase} text={t('auth.reqUpper', 'Une lettre majuscule (A-Z)')} />
-                    <RequirementItem met={validations.lowercase} text={t('auth.reqLower', 'Une lettre minuscule (a-z)')} />
-                    <RequirementItem met={validations.number} text={t('auth.reqNumber', 'Un chiffre (0-9)')} />
-                    <RequirementItem met={validations.special} text={t('auth.reqSpecial', 'Un caractère spécial (!@#$...)')} />
+                    <RequirementItem met={validations.length} text={t('auth.reqLength')} />
+                    <RequirementItem met={validations.uppercase} text={t('auth.reqUpper')} />
+                    <RequirementItem met={validations.lowercase} text={t('auth.reqLower')} />
+                    <RequirementItem met={validations.number} text={t('auth.reqNumber')} />
+                    <RequirementItem met={validations.special} text={t('auth.reqSpecial')} />
                   </ul>
                 </div>
               </div>
@@ -330,15 +333,15 @@ export default function SignUp() {
                 disabled={isLoading}
                 className={`group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-semibold rounded-2xl text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-white dark:focus:ring-offset-slate-900 transition-all shadow-lg shadow-primary/20 cursor-pointer ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-1'}`}
               >
-                {isLoading ? 'Chargement...' : t('auth.signup.submit', "S'inscrire")}
+                {isLoading ? t('Chargement...') : t('auth.signup.submit')}
               </button>
             </div>
           </form>
           
           <div className="text-center text-sm text-body dark:text-slate-400 mt-6">
-            {t('auth.signup.hasAccount', "Vous avez déjà un compte ?")}{' '}
+            {t('auth.signup.hasAccount')}{' '}
             <Link to="/signin" className="font-bold text-primary hover:text-primary-hover transition-colors">
-              {t('auth.signup.signin', 'Se connecter')}
+              {t('auth.signup.signin')}
             </Link>
           </div>
         </div>
