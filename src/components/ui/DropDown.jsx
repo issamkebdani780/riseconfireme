@@ -21,7 +21,7 @@ const DropDown = ({ title, items, columns = 2 }) => {
           {items.map((item, index) => (
             <a 
               key={index}
-              href={item.href || "#"} 
+              href={item.link} 
               className="flex items-start gap-4 p-3 rounded-2xl hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors group/item"
             >
               <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 group-hover/item:bg-white dark:group-hover/item:bg-slate-700 rounded-xl flex items-center justify-center shrink-0 shadow-sm transition-colors text-slate-400 dark:text-slate-500 group-hover/item:text-primary">

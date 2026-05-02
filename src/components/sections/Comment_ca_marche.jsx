@@ -90,7 +90,6 @@ const Comment_ca_marche = () => {
                 {/* Steps Layout */}
                 <div className="relative max-w-6xl mx-auto">
                     {/* Connection Line (Desktop) */}
-                    <div className="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-slate-100 dark:via-slate-800 to-transparent -translate-y-1/2" />
 
                     <div className="grid lg:grid-cols-5 gap-8 lg:gap-4 relative z-10">
                         {steps.map((step, i) => (
