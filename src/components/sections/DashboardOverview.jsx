@@ -28,8 +28,8 @@ const DashboardOverview = () => {
           <button
             onClick={() => setActiveTab('orders')}
             className={`px-8 py-3 rounded-2xl text-sm font-black transition-all ${activeTab === 'orders'
-                ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105'
-                : 'text-slate-500 hover:text-primary dark:text-slate-400'
+              ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105'
+              : 'text-slate-500 hover:text-primary dark:text-slate-400'
               }`}
           >
             {t('Order Statistics')}
@@ -37,8 +37,8 @@ const DashboardOverview = () => {
           <button
             onClick={() => setActiveTab('tenants')}
             className={`px-8 py-3 rounded-2xl text-sm font-black transition-all ${activeTab === 'tenants'
-                ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105'
-                : 'text-slate-500 hover:text-primary dark:text-slate-400'
+              ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105'
+              : 'text-slate-500 hover:text-primary dark:text-slate-400'
               }`}
           >
             {t('Tenant Statistics')}

@@ -1,18 +1,144 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
+const SearchableSelect = ({ options, value, onChange, placeholder, t }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredOptions = options.filter(opt =>
+    opt.label.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const selectedOption = options.find(opt => opt.value === value);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:border-primary/30 transition-all min-w-[140px]"
+      >
+        <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <span className={`text-xs font-bold truncate ${!selectedOption ? 'text-slate-400' : 'text-heading dark:text-slate-200'}`}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-[100] mt-2 w-full min-w-[200px] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="p-2 border-b border-slate-50 dark:border-slate-700">
+            <input
+              autoFocus
+              type="text"
+              className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-700 border-none rounded-lg focus:ring-1 focus:ring-primary outline-none text-heading dark:text-white"
+              placeholder={t('Rechercher...')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          <div className="max-h-[200px] overflow-y-auto p-1 custom-scrollbar">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <div
+                  key={option.value}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                    setSearch('');
+                  }}
+                  className={`px-3 py-2 text-xs rounded-lg cursor-pointer transition-colors ${value === option.value
+                    ? 'bg-primary/10 text-primary font-bold'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
+                    }`}
+                >
+                  {option.label}
+                </div>
+              ))
+            ) : (
+              <div className="px-3 py-4 text-center text-xs text-slate-400 italic">
+                {t('Aucun résultat')}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const OrdersSection = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
 
-  const orders = [
-    { id: '#ORD-7294', customer: 'Ahmed Mansouri', phone: '+213 551 23 45 67', date: '02 Mai 2026', amount: '4,500 DA', status: 'Pending', product: 'Pack Zen 2.0' },
-    { id: '#ORD-7295', customer: 'Sara El Amrani', phone: '+213 552 88 99 00', date: '02 Mai 2026', amount: '8,900 DA', status: 'Confirmed', product: 'Smart Watch Pro' },
-    { id: '#ORD-7296', customer: 'Yassine Benjelloun', phone: '+213 553 11 22 33', date: '01 Mai 2026', amount: '12,000 DA', status: 'Cancelled', product: 'AirPods Max' },
-    { id: '#ORD-7297', customer: 'Khadija Alami', phone: '+213 554 44 55 66', date: '01 Mai 2026', amount: '3,200 DA', status: 'Confirmed', product: 'Organic Tea Set' },
-    { id: '#ORD-7298', customer: 'Omar Tazi', phone: '+213 555 77 88 99', date: '30 Avr 2026', amount: '5,600 DA', status: 'Pending', product: 'Gaming Mouse' },
+  const [orders, setOrders] = useState([
+    { id: '#ORD-7294', customer: 'Ahmed Mansouri', phone: '+213 551 23 45 67', date: '02 Mai 2026', amount: '4,500 DA', status: 'Pending', product: 'Pack Zen 2.0', agent: { name: 'Amine K.', time: '14:32' } },
+    { id: '#ORD-7295', customer: 'Sara El Amrani', phone: '+213 552 88 99 00', date: '02 Mai 2026', amount: '8,900 DA', status: 'Confirmed', product: 'Smart Watch Pro', agent: { name: 'Selma R.', time: '12:15' } },
+    { id: '#ORD-7296', customer: 'Yassine Benjelloun', phone: '+213 553 11 22 33', date: '01 Mai 2026', amount: '12,000 DA', status: 'Cancelled', product: 'AirPods Max', agent: { name: 'Yanis B.', time: '10:45' } },
+    { id: '#ORD-7297', customer: 'Khadija Alami', phone: '+213 554 44 55 66', date: '01 Mai 2026', amount: '3,200 DA', status: 'Confirmed', product: 'Organic Tea Set', agent: { name: 'Ines L.', time: '16:20' } },
+    { id: '#ORD-7298', customer: 'Omar Tazi', phone: '+213 555 77 88 99', date: '30 Avr 2026', amount: '5,600 DA', status: 'Pending', product: 'Gaming Mouse', agent: { name: 'Amine K.', time: '09:15' } },
+  ]);
+  const availableAgents = [
+    { name: 'Amine K.', time: '14:32' },
+    { name: 'Selma R.', time: '12:15' },
+    { name: 'Yanis B.', time: '10:45' },
+    { name: 'Ines L.', time: '16:20' },
   ];
+
+  const [editingId, setEditingId] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+
+  const handleEditClick = (order) => {
+    setEditingId(order.id);
+    setEditFormData({ ...order });
+  };
+
+  const handleCancelClick = () => {
+    setEditingId(null);
+    setEditFormData({});
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'agentName') {
+      setEditFormData(prev => ({
+        ...prev,
+        agent: { ...prev.agent, name: value }
+      }));
+    } else {
+      setEditFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleSaveClick = (id) => {
+    setOrders(prevOrders =>
+      prevOrders.map(order => order.id === id ? editFormData : order)
+    );
+    setEditingId(null);
+    setEditFormData({});
+  };
+
+  const handleDeleteClick = (id) => {
+    if (window.confirm(t('Êtes-vous sûr de vouloir supprimer cette commande ?'))) {
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== id));
+    }
+  };
 
   const statusColors = {
     Pending: 'bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400',
@@ -35,31 +161,25 @@ const OrdersSection = () => {
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input 
-              type="text" 
-              placeholder={t('Rechercher une commande...')} 
+            <input
+              type="text"
+              placeholder={t('Rechercher une commande...')}
               className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none text-heading dark:text-white"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl text-slate-400 hover:text-primary transition-colors">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-          </button>
         </div>
-        
+
         <div className="flex items-center gap-2 p-1 bg-slate-50 dark:bg-slate-800 rounded-2xl">
           {['all', 'pending', 'confirmed', 'cancelled'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                activeTab === tab 
-                  ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' 
-                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
-              }`}
+              className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${activeTab === tab
+                ? 'bg-white dark:bg-slate-700 text-primary shadow-sm'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+                }`}
             >
               {t(tab)}
             </button>
@@ -77,6 +197,7 @@ const OrdersSection = () => {
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Client')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Produit')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Montant')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Agent')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Statut')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 text-right">{t('Actions')}</th>
               </tr>
@@ -89,44 +210,149 @@ const OrdersSection = () => {
                     <p className="text-[10px] text-slate-400 font-medium">{order.date}</p>
                   </td>
                   <td className="px-6 py-5">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-bold text-heading dark:text-slate-200">{order.customer}</span>
-                      <span className="text-[11px] text-slate-400">{order.phone}</span>
-                    </div>
+                    {editingId === order.id ? (
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="text"
+                          name="customer"
+                          value={editFormData.customer}
+                          onChange={handleInputChange}
+                          className="text-sm font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                        />
+                        <input
+                          type="text"
+                          name="phone"
+                          value={editFormData.phone}
+                          onChange={handleInputChange}
+                          className="text-[11px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-heading dark:text-slate-200">{order.customer}</span>
+                        <span className="text-[11px] text-slate-400">{order.phone}</span>
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{order.product}</span>
+                    {editingId === order.id ? (
+                      <input
+                        type="text"
+                        name="product"
+                        value={editFormData.product}
+                        onChange={handleInputChange}
+                        className="text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                      />
+                    ) : (
+                      <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{order.product}</span>
+                    )}
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm font-black text-primary">{order.amount}</span>
+                    {editingId === order.id ? (
+                      <input
+                        type="text"
+                        name="amount"
+                        value={editFormData.amount}
+                        onChange={handleInputChange}
+                        className="text-sm font-black text-primary bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                      />
+                    ) : (
+                      <span className="text-sm font-black text-primary">{order.amount}</span>
+                    )}
                   </td>
                   <td className="px-6 py-5">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${statusColors[order.status]}`}>
-                      <div className={`w-1 h-1 rounded-full me-2 ${
-                        order.status === 'Confirmed' ? 'bg-emerald-500' : 
-                        order.status === 'Pending' ? 'bg-amber-500' : 'bg-red-500'
-                      }`} />
-                      {t(order.status)}
-                    </span>
+                    {editingId === order.id ? (
+                      <div className="flex flex-col gap-1">
+                        <SearchableSelect
+                          options={availableAgents.map(a => ({ label: a.name, value: a.name }))}
+                          value={editFormData.agent.name}
+                          onChange={(val) => handleInputChange({ target: { name: 'agentName', value: val } })}
+                          placeholder={t('Agent')}
+                          t={t}
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-heading dark:text-slate-200">{order.agent.name}</span>
+                          <span className="text-[10px] text-slate-400 font-medium uppercase tracking-tight">{order.agent.time}</span>
+                        </div>
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-5">
+                    {editingId === order.id ? (
+                      <SearchableSelect
+                        options={[
+                          { label: t('Pending'), value: 'Pending' },
+                          { label: t('Confirmed'), value: 'Confirmed' },
+                          { label: t('Cancelled'), value: 'Cancelled' },
+                        ]}
+                        value={editFormData.status}
+                        onChange={(val) => handleInputChange({ target: { name: 'status', value: val } })}
+                        placeholder={t('Statut')}
+                        t={t}
+                      />
+                    ) : (
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${statusColors[order.status]}`}>
+                        <div className={`w-1 h-1 rounded-full me-2 ${order.status === 'Confirmed' ? 'bg-emerald-500' :
+                          order.status === 'Pending' ? 'bg-amber-500' : 'bg-red-500'
+                          }`} />
+                        {t(order.status)}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-5 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button title="Confirmer" className="p-2 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-xl transition-all active:scale-90">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </button>
-                      <button title="Annuler" className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all active:scale-90">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                      <button title="Détails" className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all active:scale-90">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      </button>
+                    <div className="flex items-center justify-end gap-2">
+                      {editingId === order.id ? (
+                        <>
+                          <button
+                            onClick={() => handleSaveClick(order.id)}
+                            title="Sauvegarder"
+                            className="p-2 text-emerald-500 hover:bg-emerald-500/10 rounded-xl transition-all active:scale-90"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={handleCancelClick}
+                            title="Annuler"
+                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all active:scale-90"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleEditClick(order)}
+                            title="Modifier"
+                            className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all active:scale-90"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button title="Détails" className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-90">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(order.id)}
+                            title="Supprimer"
+                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all active:scale-90"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -134,7 +360,7 @@ const OrdersSection = () => {
             </tbody>
           </table>
         </div>
-        
+
         {/* Pagination Placeholder */}
         <div className="p-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <p className="text-xs text-slate-400 font-medium">Affichage de 5 sur 1,284 commandes</p>
@@ -147,6 +373,7 @@ const OrdersSection = () => {
         </div>
       </div>
     </div>
+
   );
 };
 
