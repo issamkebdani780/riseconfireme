@@ -5,14 +5,11 @@ export const setAuthData = (data, identifier) => {
   if (data.accessToken) {
     localStorage.setItem(TOKEN_KEY, data.accessToken);
   }
-  if (data.agent) {
-    localStorage.setItem(USER_KEY, JSON.stringify(data.agent));
-  } else if (identifier) {
-    localStorage.setItem('userName', identifier);
-  }
   
-  if (data.agent) {
-    localStorage.setItem('userName', `${data.agent.firstName} ${data.agent.lastName}`);
+  const user = data.user;
+  if (user) {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    localStorage.setItem('userName', `${user.firstName} ${user.lastName}`);
   } else if (identifier) {
     localStorage.setItem('userName', identifier);
   }

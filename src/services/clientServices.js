@@ -44,7 +44,7 @@ export const clientServices = {
 
   getMe: async () => {
     const response = await fetch(`${BASE_URL}/auth/me`, {
-      method: 'POST',
+      method: 'GET',
       headers: getHeaders(true),
     });
     return await handleResponse(response);
@@ -61,5 +61,21 @@ export const clientServices = {
       console.error('Logout error:', error);
       throw error;
     }
+  },
+
+  getAgents: async () => {
+    const response = await fetch(`${BASE_URL}/agents`, {
+      method: 'GET',
+      headers: getHeaders(true),
+    });
+    return await handleResponse(response);
+  },
+
+  getOrders: async () => {
+    const response = await fetch(`${BASE_URL}/orders`, {
+      method: 'GET',
+      headers: getHeaders(true),
+    });
+    return await handleResponse(response);
   },
 };

@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { clientServices } from '../../services/clientServices';
 
 const AgentsSection = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [agents, setAgents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const agents = [
+  const initialAgents = [
     { id: 1, name: 'Amine K.', role: 'Expert Confirmation', status: 'online', calls: 1240, rate: '92%', lastActive: 'Il y a 2 min', email: 'amine.k@riseconfirm.com' },
     { id: 2, name: 'Selma R.', role: 'Senior Agent', status: 'online', calls: 980, rate: '88%', lastActive: 'En ligne', email: 'selma.r@riseconfirm.com' },
     { id: 3, name: 'Yanis B.', role: 'Junior Agent', status: 'away', calls: 850, rate: '84%', lastActive: 'Il y a 15 min', email: 'yanis.b@riseconfirm.com' },
@@ -15,11 +19,37 @@ const AgentsSection = () => {
     { id: 6, name: 'Khadija A.', role: 'Senior Agent', status: 'online', calls: 1100, rate: '90%', lastActive: 'En ligne', email: 'khadija.a@riseconfirm.com' },
   ];
 
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        setLoading(true);
+        const data = await clientServices.getAgents();
+        setAgents(data.length > 0 ? data : initialAgents);
+      } catch (err) {
+        console.error('Failed to fetch agents:', err);
+        setError(err.message);
+        setAgents(initialAgents); // Fallback
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgents();
+  }, []);
+
   const filteredAgents = agents.filter(agent => {
     const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) || agent.role.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = activeFilter === 'all' || agent.status === activeFilter;
     return matchesSearch && matchesFilter;
   });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-slide-up">
