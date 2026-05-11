@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { clientServices } from '../../services/clientServices';
 
-const AgentsSection = () => {
+const AgentsSection = ({ permissions = [] }) => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const hasPerm = (p) => permissions.includes(p);
 
   const initialAgents = [
     { id: 1, name: 'Amine K.', role: 'Expert Confirmation', status: 'online', calls: 1240, rate: '92%', lastActive: 'Il y a 2 min', email: 'amine.k@riseconfirm.com' },
@@ -59,12 +61,14 @@ const AgentsSection = () => {
           <h2 className="text-2xl font-black text-heading dark:text-white tracking-tight">{t('Gestion des Agents')}</h2>
           <p className="text-sm text-slate-400 font-medium mt-1">Supervisez et gérez les performances de votre équipe.</p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-black text-sm">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          {t('Ajouter un Agent')}
-        </button>
+        {hasPerm('agents:create') && (
+          <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-black text-sm">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            {t('Ajouter un Agent')}
+          </button>
+        )}
       </div>
 
       {/* Filters Area */}
@@ -136,74 +140,16 @@ const AgentsSection = () => {
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t('Dernière Activité')}</span>
                 <span className="text-xs font-bold text-heading dark:text-slate-300">{agent.lastActive}</span>
               </div>
-              <button className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-400 hover:text-primary transition-all active:scale-90 shadow-sm">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                </svg>
-              </button>
+              {(hasPerm('agents:edit') || hasPerm('agents:delete')) && (
+                <button className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-400 hover:text-primary transition-all active:scale-90 shadow-sm">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Detailed Performance Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-[48px] p-10 border border-slate-100 dark:border-slate-800 shadow-sm">
-        <div className="flex items-center justify-between mb-8">
-          <h3 className="text-lg font-black text-heading dark:text-white flex items-center gap-3">
-            <div className="w-2 h-6 bg-emerald-500 rounded-full" />
-            {t('Performance Détaillée')}
-          </h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">
-                <th className="pb-6 px-4">{t('Agent')}</th>
-                <th className="pb-6 px-4">{t('Email')}</th>
-                <th className="pb-6 px-4">{t('Total Appels')}</th>
-                <th className="pb-6 px-4">{t('Efficacité')}</th>
-                <th className="pb-6 px-4">{t('Status')}</th>
-                <th className="pb-6 px-4 text-right">{t('Actions')}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-              {filteredAgents.map((agent) => (
-                <tr key={agent.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all">
-                  <td className="py-6 px-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-black text-primary text-xs">
-                        {agent.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <span className="text-sm font-bold text-heading dark:text-white">{agent.name}</span>
-                    </div>
-                  </td>
-                  <td className="py-6 px-4 text-sm font-medium text-slate-500 dark:text-slate-400">{agent.email}</td>
-                  <td className="py-6 px-4 text-sm font-black text-heading dark:text-white">{agent.calls}</td>
-                  <td className="py-6 px-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden max-w-[100px]">
-                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: agent.rate }} />
-                      </div>
-                      <span className="text-xs font-black text-emerald-500">{agent.rate}</span>
-                    </div>
-                  </td>
-                  <td className="py-6 px-4">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                      agent.status === 'online' ? 'bg-emerald-100 text-emerald-600' : agent.status === 'away' ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-400'
-                    }`}>
-                      {t(agent.status)}
-                    </span>
-                  </td>
-                  <td className="py-6 px-4 text-right">
-                    <button className="px-4 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                      {t('Détails')}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   );

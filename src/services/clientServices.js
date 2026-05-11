@@ -78,4 +78,12 @@ export const clientServices = {
     });
     return await handleResponse(response);
   },
+
+  getPermissions: async () => {
+    const response = await fetch(`${BASE_URL}/agents/permissions`, {
+      method: 'GET',
+      headers: getHeaders(true),
+    });
+    return await handleResponse(response);
+  },
 };

@@ -16,7 +16,7 @@ import {
   Legend
 } from 'recharts';
 
-const DashboardOverview = () => {
+const DashboardOverview = ({ permissions = [] }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('orders');
 
@@ -120,7 +120,7 @@ const OrderStatistics = () => {
               {t('Daily Trends')}
             </h3>
           </div>
-          <div className="h-80">
+          <div className="h-80 min-h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dailyTrends}>
                 <defs>
@@ -154,7 +154,7 @@ const OrderStatistics = () => {
         {/* Status Overview */}
         <div className="bg-white dark:bg-slate-900 rounded-[40px] p-8 border border-slate-100 dark:border-slate-800 shadow-sm">
           <h3 className="text-lg font-black mb-8">{t('Status Overview')}</h3>
-          <div className="h-64 relative">
+          <div className="h-64 min-h-[256px] relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -276,7 +276,7 @@ const TenantStatistics = () => {
             <div className="w-2 h-6 bg-primary rounded-full" />
             {t('Top 5 Tenants by Volume')}
           </h3>
-          <div className="h-80">
+          <div className="h-80 min-h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={topTenants} layout="vertical" margin={{ left: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />

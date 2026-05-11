@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/ui/Logo';
-import { getUser, clearAuthData } from '../utils/auth';
+import { getUser, clearAuthData, getPermissions, setPermissions } from '../utils/auth';
 import { clientServices } from '../services/clientServices';
 
 // Import Sections
@@ -20,7 +20,9 @@ const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [user, setUser] = useState(null);
+  const [permissions, setPermissionsState] = useState(getPermissions());
   const [notifications, setNotifications] = useState(3);
+  const fetchStarted = useRef(false);
   
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -37,7 +39,30 @@ const Dashboard = () => {
       // navigate('/signin'); 
     }
     setUser(userData);
-  }, [navigate]);
+
+    // Fetch permissions if not already loaded
+    const fetchPermissions = async () => {
+      if (fetchStarted.current) return;
+      fetchStarted.current = true;
+
+      try {
+        const data = await clientServices.getPermissions();
+        const permissionsList = Array.isArray(data) ? data : (data?.permissions || []);
+        
+        if (permissionsList.length > 0) {
+          setPermissions(permissionsList);
+          setPermissionsState(permissionsList);
+        }
+      } catch (error) {
+        console.error('Failed to fetch permissions:', error);
+        fetchStarted.current = false; // Allow retry on error
+      }
+    };
+
+    if (permissions.length === 0) {
+      fetchPermissions();
+    }
+  }, [navigate, permissions.length]);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -50,13 +75,15 @@ const Dashboard = () => {
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
+  const hasPerm = (p) => permissions.includes(p);
+
   const navItems = [
-    { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon /> },
-    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon /> },
-    { id: 'clients', label: t('Clients'), icon: <ClientsIcon /> },
-    { id: 'agents', label: t('Agents'), icon: <AgentsIcon /> },
-    { id: 'statistics', label: t('Statistiques'), icon: <StatsIcon /> },
-  ];
+    { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon />, visible: true },
+    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: hasPerm('orders:view') },
+    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: hasPerm('clients:view') },
+    { id: 'agents', label: t('Agents'), icon: <AgentsIcon />, visible: hasPerm('agents:view') },
+    { id: 'statistics', label: t('Statistiques'), icon: <StatsIcon />, visible: hasPerm('statistics:view') },
+  ].filter(item => item.visible);
 
   const handleLogout = async () => {
     try {
@@ -217,11 +244,11 @@ const Dashboard = () => {
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar scroll-smooth">
           <div className="max-w-7xl mx-auto space-y-8 animate-slide-up pb-12">
-            {activeSection === 'dashboard' && <DashboardOverview />}
-            {activeSection === 'orders' && <OrdersSection />}
-            {activeSection === 'clients' && <ClientsSection />}
-            {activeSection === 'agents' && <AgentsSection />}
-            {activeSection === 'statistics' && <StatisticsSection />}
+            {activeSection === 'dashboard' && <DashboardOverview permissions={permissions} />}
+            {activeSection === 'orders' && <OrdersSection permissions={permissions} />}
+            {activeSection === 'clients' && <ClientsSection permissions={permissions} />}
+            {activeSection === 'agents' && <AgentsSection permissions={permissions} />}
+            {activeSection === 'statistics' && <StatisticsSection permissions={permissions} />}
           </div>
         </div>
       </main>

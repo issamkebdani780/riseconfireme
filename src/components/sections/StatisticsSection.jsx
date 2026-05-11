@@ -14,9 +14,11 @@ import {
 } from 'recharts';
 import MapUI from './mapui';
 
-const StatisticsSection = () => {
+const StatisticsSection = ({ permissions = [] }) => {
   const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState('30d');
+
+  const hasPerm = (p) => permissions.includes(p);
 
   const salesData = [
     { day: 'Lun', sales: 4200, confirmations: 3800 },
@@ -58,11 +60,13 @@ const StatisticsSection = () => {
               </button>
             ))}
           </div>
-          <button className="p-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-          </button>
+          {hasPerm('reports:generate') && (
+            <button className="p-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
@@ -94,7 +98,7 @@ const StatisticsSection = () => {
             </div>
           </div>
           
-          <div className="h-80 w-full">
+          <div className="h-80 w-full min-h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={salesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
@@ -160,7 +164,7 @@ const StatisticsSection = () => {
         <div className="bg-white dark:bg-slate-900 rounded-[48px] p-10 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col">
           <h3 className="text-lg font-black text-heading dark:text-white mb-10">Répartition Statuts</h3>
           <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="relative w-full h-64">
+            <div className="relative w-full h-64 min-h-[256px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
