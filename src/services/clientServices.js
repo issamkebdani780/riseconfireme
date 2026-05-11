@@ -86,4 +86,12 @@ export const clientServices = {
     });
     return await handleResponse(response);
   },
+
+  getAgents: async (page = 1, limit = 10) => {
+    const response = await fetch(`${BASE_URL}/admin/agents?page=${page}&limit=${limit}`, {
+      method: 'GET',
+      headers: getHeaders(true),
+    });
+    return await handleResponse(response);
+  },
 };

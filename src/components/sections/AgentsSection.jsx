@@ -12,25 +12,41 @@ const AgentsSection = ({ permissions = [] }) => {
 
   const hasPerm = (p) => permissions.includes(p);
 
-  const initialAgents = [
-    { id: 1, name: 'Amine K.', role: 'Expert Confirmation', status: 'online', calls: 1240, rate: '92%', lastActive: 'Il y a 2 min', email: 'amine.k@riseconfirm.com' },
-    { id: 2, name: 'Selma R.', role: 'Senior Agent', status: 'online', calls: 980, rate: '88%', lastActive: 'En ligne', email: 'selma.r@riseconfirm.com' },
-    { id: 3, name: 'Yanis B.', role: 'Junior Agent', status: 'away', calls: 850, rate: '84%', lastActive: 'Il y a 15 min', email: 'yanis.b@riseconfirm.com' },
-    { id: 4, name: 'Ines L.', role: 'Expert Confirmation', status: 'offline', calls: 720, rate: '81%', lastActive: 'Hier', email: 'ines.l@riseconfirm.com' },
-    { id: 5, name: 'Ahmed M.', role: 'Team Lead', status: 'online', calls: 1560, rate: '95%', lastActive: 'En ligne', email: 'ahmed.m@riseconfirm.com' },
-    { id: 6, name: 'Khadija A.', role: 'Senior Agent', status: 'online', calls: 1100, rate: '90%', lastActive: 'En ligne', email: 'khadija.a@riseconfirm.com' },
-  ];
 
   useEffect(() => {
     const fetchAgents = async () => {
       try {
         setLoading(true);
-        const data = await clientServices.getAgents();
-        setAgents(data.length > 0 ? data : initialAgents);
+        const result = await clientServices.getAgents();
+        
+        // Map API data to UI structure
+        const mappedAgents = (result.data || []).map(agent => {
+          // Map API status to UI status
+          let uiStatus = 'offline';
+          if (agent.status === 'available') uiStatus = 'online';
+          else if (agent.status === 'busy' || agent.status === 'break') uiStatus = 'away';
+          else if (agent.status === 'offline') uiStatus = 'offline';
+          
+          return {
+            id: agent.id,
+            name: `${agent.firstName} ${agent.lastName}`,
+            email: agent.email,
+            phone: agent.phone,
+            role: agent.role?.description || 'Agent',
+            status: uiStatus,
+            apiStatus: agent.status,
+            isOnline: agent.isOnline,
+            // Placeholder values since they aren't in the agents API yet
+            calls: Math.floor(Math.random() * 500) + 50, 
+            rate: (Math.floor(Math.random() * 20) + 80) + '%',
+            lastActive: agent.lastHeartbeatAt ? new Date(agent.lastHeartbeatAt).toLocaleTimeString() : 'N/A'
+          };
+        });
+
+        setAgents(mappedAgents);
       } catch (err) {
         console.error('Failed to fetch agents:', err);
         setError(err.message);
-        setAgents(initialAgents); // Fallback
       } finally {
         setLoading(false);
       }
@@ -40,7 +56,13 @@ const AgentsSection = ({ permissions = [] }) => {
   }, []);
 
   const filteredAgents = agents.filter(agent => {
-    const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) || agent.role.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchStr = searchTerm.toLowerCase();
+    const nameMatch = agent.name.toLowerCase().includes(searchStr);
+    const roleMatch = agent.role.toLowerCase().includes(searchStr);
+    const emailMatch = agent.email?.toLowerCase().includes(searchStr);
+    const phoneMatch = agent.phone?.includes(searchTerm);
+    const matchesSearch = nameMatch || roleMatch || emailMatch || phoneMatch;
+    
     const matchesFilter = activeFilter === 'all' || agent.status === activeFilter;
     return matchesSearch && matchesFilter;
   });
@@ -114,14 +136,32 @@ const AgentsSection = ({ permissions = [] }) => {
               agent.status === 'online' ? 'bg-emerald-500' : agent.status === 'away' ? 'bg-amber-500' : 'bg-slate-300'
             }`} />
 
-            <div className="flex items-center gap-5 mb-8">
-              <div className="w-16 h-16 rounded-[24px] bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/5 group-hover:scale-110 transition-transform">
+            <div className="flex items-center gap-5 mb-6">
+              <div className="w-16 h-16 rounded-[24px] bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/5 group-hover:scale-110 transition-transform shrink-0">
                 {agent.name.split(' ').map(n => n[0]).join('')}
               </div>
-              <div>
-                <h4 className="text-lg font-black text-heading dark:text-white">{agent.name}</h4>
-                <p className="text-xs text-primary font-bold uppercase tracking-wider">{agent.role}</p>
+              <div className="min-w-0">
+                <h4 className="text-lg font-black text-heading dark:text-white truncate">{agent.name}</h4>
+                <p className="text-xs text-primary font-bold uppercase tracking-wider truncate">{agent.role}</p>
               </div>
+            </div>
+
+            {/* Contact Info */}
+            <div className="space-y-2 mb-8">
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="truncate">{agent.email}</span>
+              </div>
+              {agent.phone && (
+                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                  <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span>{agent.phone}</span>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-8">
