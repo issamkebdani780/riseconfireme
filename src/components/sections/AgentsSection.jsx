@@ -10,6 +10,9 @@ const AgentsSection = ({ permissions = [] }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [editingId, setEditingId] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+
   const hasPerm = (p) => permissions.includes(p);
 
 
@@ -67,6 +70,53 @@ const AgentsSection = ({ permissions = [] }) => {
     return matchesSearch && matchesFilter;
   });
 
+  const handleAddAgent = () => {
+    const newAgent = {
+      id: Math.max(0, ...agents.map(a => a.id)) + 1,
+      name: '',
+      email: '',
+      phone: '',
+      role: 'Agent',
+      status: 'offline',
+      apiStatus: 'offline',
+      isOnline: false,
+      calls: 0,
+      rate: '0%',
+      lastActive: 'N/A'
+    };
+    setAgents([newAgent, ...agents]);
+    setEditingId(newAgent.id);
+    setEditFormData({ ...newAgent });
+  };
+
+  const handleEditClick = (agent) => {
+    setEditingId(agent.id);
+    setEditFormData({ ...agent });
+  };
+
+  const handleSaveClick = (id) => {
+    setAgents(prev => prev.map(a => a.id === id ? { ...a, ...editFormData } : a));
+    setEditingId(null);
+    setEditFormData({});
+  };
+
+  const handleCancelClick = () => {
+    setEditingId(null);
+    setEditFormData({});
+  };
+
+  const handleDeleteAgent = (id) => {
+    if (window.confirm(t('Êtes-vous sûr de vouloir supprimer cet agent ?'))) {
+      setAgents(prev => prev.filter(a => a.id !== id));
+      if (editingId === id) setEditingId(null);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -84,7 +134,10 @@ const AgentsSection = ({ permissions = [] }) => {
           <p className="text-sm text-slate-400 font-medium mt-1">Supervisez et gérez les performances de votre équipe.</p>
         </div>
         {hasPerm('agents:create') && (
-          <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-black text-sm">
+          <button 
+            onClick={handleAddAgent}
+            className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-black text-sm"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -138,11 +191,34 @@ const AgentsSection = ({ permissions = [] }) => {
 
             <div className="flex items-center gap-5 mb-6">
               <div className="w-16 h-16 rounded-[24px] bg-primary/10 flex items-center justify-center font-black text-primary text-xl border-2 border-primary/5 group-hover:scale-110 transition-transform shrink-0">
-                {agent.name.split(' ').map(n => n[0]).join('')}
+                {agent.name ? agent.name.split(' ').map(n => n[0]).join('') : 'A'}
               </div>
-              <div className="min-w-0">
-                <h4 className="text-lg font-black text-heading dark:text-white truncate">{agent.name}</h4>
-                <p className="text-xs text-primary font-bold uppercase tracking-wider truncate">{agent.role}</p>
+              <div className="min-w-0 flex-1">
+                {editingId === agent.id ? (
+                  <>
+                    <input
+                      type="text"
+                      name="name"
+                      value={editFormData.name}
+                      onChange={handleInputChange}
+                      placeholder={t('Nom complet')}
+                      className="w-full text-lg font-black bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 mb-1 outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    <input
+                      type="text"
+                      name="role"
+                      value={editFormData.role}
+                      onChange={handleInputChange}
+                      placeholder={t('Rôle')}
+                      className="w-full text-xs font-bold uppercase tracking-wider bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <h4 className="text-lg font-black text-heading dark:text-white truncate">{agent.name || 'Nouvel Agent'}</h4>
+                    <p className="text-xs text-primary font-bold uppercase tracking-wider truncate">{agent.role}</p>
+                  </>
+                )}
               </div>
             </div>
 
@@ -152,16 +228,36 @@ const AgentsSection = ({ permissions = [] }) => {
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="truncate">{agent.email}</span>
+                {editingId === agent.id ? (
+                  <input
+                    type="text"
+                    name="email"
+                    value={editFormData.email}
+                    onChange={handleInputChange}
+                    placeholder={t('Email')}
+                    className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 outline-none focus:ring-1 focus:ring-primary"
+                  />
+                ) : (
+                  <span className="truncate">{agent.email || '-'}</span>
+                )}
               </div>
-              {agent.phone && (
-                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                  <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <span>{agent.phone}</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                {editingId === agent.id ? (
+                  <input
+                    type="text"
+                    name="phone"
+                    value={editFormData.phone}
+                    onChange={handleInputChange}
+                    placeholder={t('Téléphone')}
+                    className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 outline-none focus:ring-1 focus:ring-primary"
+                  />
+                ) : (
+                  <span>{agent.phone || '-'}</span>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-8">
@@ -180,12 +276,37 @@ const AgentsSection = ({ permissions = [] }) => {
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t('Dernière Activité')}</span>
                 <span className="text-xs font-bold text-heading dark:text-slate-300">{agent.lastActive}</span>
               </div>
-              {(hasPerm('agents:edit') || hasPerm('agents:delete')) && (
-                <button className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-400 hover:text-primary transition-all active:scale-90 shadow-sm">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                  </svg>
-                </button>
+              
+              {editingId === agent.id ? (
+                <div className="flex items-center gap-2">
+                  <button onClick={handleCancelClick} className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all" title={t('Annuler')}>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <button onClick={() => handleSaveClick(agent.id)} className="p-2 text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-xl transition-all" title={t('Sauvegarder')}>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  {hasPerm('agents:edit') && (
+                    <button onClick={() => handleEditClick(agent)} className="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all shadow-sm" title={t('Modifier')}>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                  )}
+                  {hasPerm('agents:delete') && (
+                    <button onClick={() => handleDeleteAgent(agent.id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all shadow-sm" title={t('Supprimer')}>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           </div>

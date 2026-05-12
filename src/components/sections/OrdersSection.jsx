@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SearchableSelect from '../common/SearchableSelect';
+import { clientServices } from '../../services/clientServices';
 
 const OrdersSection = ({ permissions = [] }) => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [dateRange, setDateRange] = useState('All');
+  const [filterTenant, setFilterTenant] = useState('all');
+  const [filterTeam, setFilterTeam] = useState('all');
+  const [filterWilaya, setFilterWilaya] = useState('all');
+  const [filterProduct, setFilterProduct] = useState('all');
 
   const hasPerm = (p) => permissions.includes(p);
 
   const [orders, setOrders] = useState([
-    { id: '#ORD-7294', customer: 'Ahmed Mansouri', phone: '+213 551 23 45 67', date: '02 Mai 2026', amount: '4,500 DA', status: 'Pending', product: 'Pack Zen 2.0', agent: { name: 'Amine K.', time: '14:32' } },
-    { id: '#ORD-7295', customer: 'Sara El Amrani', phone: '+213 552 88 99 00', date: '02 Mai 2026', amount: '8,900 DA', status: 'Confirmed', product: 'Smart Watch Pro', agent: { name: 'Selma R.', time: '12:15' } },
-    { id: '#ORD-7296', customer: 'Yassine Benjelloun', phone: '+213 553 11 22 33', date: '01 Mai 2026', amount: '12,000 DA', status: 'Cancelled', product: 'AirPods Max', agent: { name: 'Yanis B.', time: '10:45' } },
-    { id: '#ORD-7297', customer: 'Khadija Alami', phone: '+213 554 44 55 66', date: '01 Mai 2026', amount: '3,200 DA', status: 'Confirmed', product: 'Organic Tea Set', agent: { name: 'Ines L.', time: '16:20' } },
-    { id: '#ORD-7298', customer: 'Omar Tazi', phone: '+213 555 77 88 99', date: '30 Avr 2026', amount: '5,600 DA', status: 'Pending', product: 'Gaming Mouse', agent: { name: 'Amine K.', time: '09:15' } },
+    { id: '#ORD-7294', customer: 'Ahmed Mansouri', phone: '+213 551 23 45 67', date: '02 Mai 2026', amount: '4,500 DA', status: 'Pending', product: 'Pack Zen 2.0', agent: { name: 'Amine K.', time: '14:32' }, wilaya: 'Alger', commune: 'Sidi M\'Hamed', deliveryCompany: 'Yalidine', deliveryPrice: '400 DA' },
+    { id: '#ORD-7295', customer: 'Sara El Amrani', phone: '+213 552 88 99 00', date: '02 Mai 2026', amount: '8,900 DA', status: 'Confirmed', product: 'Smart Watch Pro', agent: { name: 'Selma R.', time: '12:15' }, wilaya: 'Oran', commune: 'Bir El Djir', deliveryCompany: 'ZR Express', deliveryPrice: '600 DA' },
+    { id: '#ORD-7296', customer: 'Yassine Benjelloun', phone: '+213 553 11 22 33', date: '01 Mai 2026', amount: '12,000 DA', status: 'Cancelled', product: 'AirPods Max', agent: { name: 'Yanis B.', time: '10:45' }, wilaya: 'Constantine', commune: 'Khroub', deliveryCompany: 'DHD', deliveryPrice: '500 DA' },
+    { id: '#ORD-7297', customer: 'Khadija Alami', phone: '+213 554 44 55 66', date: '01 Mai 2026', amount: '3,200 DA', status: 'Confirmed', product: 'Organic Tea Set', agent: { name: 'Ines L.', time: '16:20' }, wilaya: 'Alger', commune: 'Bab El Oued', deliveryCompany: 'Yalidine', deliveryPrice: '400 DA' },
+    { id: '#ORD-7298', customer: 'Omar Tazi', phone: '+213 555 77 88 99', date: '30 Avr 2026', amount: '5,600 DA', status: 'Pending', product: 'Gaming Mouse', agent: { name: 'Amine K.', time: '09:15' }, wilaya: 'Setif', commune: 'El Eulma', deliveryCompany: 'ZR Express', deliveryPrice: '450 DA' },
   ]);
   const availableAgents = [
     { name: 'Amine K.', time: '14:32' },
@@ -23,12 +29,50 @@ const OrdersSection = ({ permissions = [] }) => {
     { name: 'Ines L.', time: '16:20' },
   ];
 
+  const [wilayas, setWilayas] = useState([]);
+  const [loadingWilayas, setLoadingWilayas] = useState(false);
+
+  React.useEffect(() => {
+    const fetchWilayas = async () => {
+      try {
+        setLoadingWilayas(true);
+        const data = await clientServices.getWilayas();
+        setWilayas(data);
+      } catch (error) {
+        console.error('Failed to fetch wilayas:', error);
+      } finally {
+        setLoadingWilayas(false);
+      }
+    };
+    fetchWilayas();
+  }, []);
+
   const [editingId, setEditingId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
 
   const handleEditClick = (order) => {
     setEditingId(order.id);
     setEditFormData({ ...order });
+  };
+
+  const handleAddOrder = () => {
+    const newOrder = {
+      id: `#ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+      customer: '',
+      phone: '',
+      date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }),
+      amount: '',
+      status: 'Pending',
+      product: '',
+      agent: { name: availableAgents[0]?.name || 'Agent', time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) },
+      wilaya: '',
+      commune: '',
+      deliveryCompany: '',
+      deliveryPrice: ''
+    };
+    setOrders([newOrder, ...orders]);
+    setEditingId(newOrder.id);
+    setEditFormData({ ...newOrder });
   };
 
   const handleCancelClick = () => {
@@ -51,12 +95,24 @@ const OrdersSection = ({ permissions = [] }) => {
     }
   };
 
-  const handleSaveClick = (id) => {
+  const handleSaveClick = (id, updatedData = editFormData) => {
     setOrders(prevOrders =>
-      prevOrders.map(order => order.id === id ? editFormData : order)
+      prevOrders.map(order => order.id === id ? updatedData : order)
     );
     setEditingId(null);
     setEditFormData({});
+  };
+
+  const handleBlur = (id) => {
+    handleSaveClick(id);
+  };
+
+  const handleKeyDown = (e, id) => {
+    if (e.key === 'Enter') {
+      handleSaveClick(id);
+    } else if (e.key === 'Escape') {
+      handleCancelClick();
+    }
   };
 
   const handleDeleteClick = (id) => {
@@ -72,10 +128,18 @@ const OrdersSection = ({ permissions = [] }) => {
   };
 
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.customer.toLowerCase().includes(searchTerm.toLowerCase()) || order.id.includes(searchTerm);
+    const matchesSearch = order.customer.toLowerCase().includes(searchTerm.toLowerCase()) || order.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTab = activeTab === 'all' || order.status.toLowerCase() === activeTab.toLowerCase();
-    return matchesSearch && matchesTab;
+    const matchesWilaya = filterWilaya === 'all' || order.wilaya === filterWilaya;
+    const matchesProduct = filterProduct === 'all' || order.product === filterProduct;
+    // Note: Date, Team, and Tenant are UI placeholders for future API integration
+    return matchesSearch && matchesTab && matchesWilaya && matchesProduct;
   });
+
+  const pendingOrdersCount = orders.filter(o => o.status === 'Pending').length;
+  const confirmedOrdersCount = orders.filter(o => o.status === 'Confirmed').length;
+  const cancelledOrdersCount = orders.filter(o => o.status === 'Cancelled').length;
+  const totalOrdersCount = orders.length;
 
   return (
     <div className="space-y-6">
@@ -85,7 +149,10 @@ const OrdersSection = ({ permissions = [] }) => {
           <p className="text-sm text-slate-400 font-medium mt-1">Gérez et suivez le statut de vos commandes en temps réel.</p>
         </div>
         {hasPerm('orders:create') && (
-          <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-black text-sm">
+          <button 
+            onClick={handleAddOrder}
+            className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-all font-black text-sm"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -94,36 +161,112 @@ const OrdersSection = ({ permissions = [] }) => {
         )}
       </div>
 
+      {/* Status Summary Bar */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-[24px] border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{t('Total Commandes')}</span>
+          <span className="text-2xl font-black text-heading dark:text-white">{totalOrdersCount}</span>
+        </div>
+        <div className="bg-amber-50 dark:bg-amber-500/10 p-4 sm:p-5 rounded-[24px] border border-amber-100 dark:border-amber-500/20 shadow-sm flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-1">{t('En Attente')}</span>
+          <span className="text-2xl font-black text-amber-600 dark:text-amber-400">{pendingOrdersCount}</span>
+        </div>
+        <div className="bg-emerald-50 dark:bg-emerald-500/10 p-4 sm:p-5 rounded-[24px] border border-emerald-100 dark:border-emerald-500/20 shadow-sm flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1">{t('Confirmées')}</span>
+          <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{confirmedOrdersCount}</span>
+        </div>
+        <div className="bg-red-50 dark:bg-red-500/10 p-4 sm:p-5 rounded-[24px] border border-red-100 dark:border-red-500/20 shadow-sm flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-400 mb-1">{t('Annulées')}</span>
+          <span className="text-2xl font-black text-red-600 dark:text-red-400">{cancelledOrdersCount}</span>
+        </div>
+      </div>
+
       {/* Filters & Actions */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm">
-        <div className="flex items-center gap-4 flex-1">
-          <div className="relative flex-1 max-w-md">
-            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder={t('Rechercher une commande...')}
-              className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none text-heading dark:text-white"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      <div className="flex flex-col gap-4 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-4 w-full lg:w-auto flex-1">
+            <div className="relative flex-1 lg:max-w-md">
+              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder={t('Rechercher une commande...')}
+                className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none text-heading dark:text-white font-medium"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 p-1 bg-slate-50 dark:bg-slate-800 rounded-2xl overflow-x-auto no-scrollbar">
+            {['all', 'pending', 'confirmed', 'cancelled'].map((status) => (
+              <button
+                key={status}
+                onClick={() => setActiveTab(status)}
+                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
+                  activeTab === status
+                    ? 'bg-white dark:bg-slate-700 text-primary shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+                }`}
+              >
+                {t(status)}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 p-1 bg-slate-50 dark:bg-slate-800 rounded-2xl">
-          {['all', 'pending', 'confirmed', 'cancelled'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${activeTab === tab
-                ? 'bg-white dark:bg-slate-700 text-primary shadow-sm'
-                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+        {/* Advanced Filters */}
+        <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-50 dark:border-slate-800">
+          <div className="flex bg-slate-50 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            {['Today', '7d', '30d', 'All'].map((range) => (
+              <button
+                key={range}
+                onClick={() => setDateRange(range)}
+                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  dateRange === range ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
                 }`}
-            >
-              {t(tab)}
-            </button>
-          ))}
+              >
+                {t(range)}
+              </button>
+            ))}
+          </div>
+          <select 
+            value={filterTenant} onChange={(e) => setFilterTenant(e.target.value)}
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-xs font-bold text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
+          >
+            <option value="all">{t('Tous les Tenants')}</option>
+            <option value="fashion">Fashion Store</option>
+            <option value="electro">Electro Dz</option>
+          </select>
+          <select 
+            value={filterTeam} onChange={(e) => setFilterTeam(e.target.value)}
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-xs font-bold text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
+          >
+            <option value="all">{t('Toutes les Équipes')}</option>
+            <option value="alpha">Team Alpha</option>
+            <option value="beta">Team Beta</option>
+          </select>
+          <select 
+            value={filterWilaya} onChange={(e) => setFilterWilaya(e.target.value)}
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-xs font-bold text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm max-w-[150px] truncate"
+          >
+            <option value="all">{t('Toutes les Wilayas')}</option>
+            {wilayas.map(w => (
+              <option key={w.id || w.fr} value={w.fr}>{w.fr}</option>
+            ))}
+          </select>
+          <select 
+            value={filterProduct} onChange={(e) => setFilterProduct(e.target.value)}
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-xs font-bold text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm max-w-[150px] truncate"
+          >
+            <option value="all">{t('Tous les Produits')}</option>
+            <option value="Pack Zen 2.0">Pack Zen 2.0</option>
+            <option value="Smart Watch Pro">Smart Watch Pro</option>
+            <option value="AirPods Max">AirPods Max</option>
+            <option value="Organic Tea Set">Organic Tea Set</option>
+            <option value="Gaming Mouse">Gaming Mouse</option>
+          </select>
         </div>
       </div>
 
@@ -135,16 +278,24 @@ const OrdersSection = ({ permissions = [] }) => {
               <tr className="bg-slate-50/50 dark:bg-slate-800/50">
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Commande')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Client')}</th>
-                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Produit')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden md:table-cell">{t('Produit')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Montant')}</th>
-                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Agent')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden lg:table-cell">{t('Agent')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Statut')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden xl:table-cell">{t('Wilaya')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden xl:table-cell">{t('Commune')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden lg:table-cell">{t('Livraison')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden lg:table-cell">{t('Prix Liv.')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 text-right">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
               {filteredOrders.map((order) => (
-                <tr key={order.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr 
+                  key={order.id} 
+                  onClick={() => editingId !== order.id && handleEditClick(order)}
+                  className={`group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer ${editingId === order.id ? 'bg-slate-50/50 dark:bg-slate-800/30' : ''}`}
+                >
                   <td className="px-6 py-5">
                     <span className="text-sm font-black text-heading dark:text-white">{order.id}</span>
                     <p className="text-[10px] text-slate-400 font-medium">{order.date}</p>
@@ -155,8 +306,11 @@ const OrdersSection = ({ permissions = [] }) => {
                         <input
                           type="text"
                           name="customer"
+                          autoFocus
                           value={editFormData.customer}
                           onChange={handleInputChange}
+                          onKeyDown={(e) => handleKeyDown(e, order.id)}
+                          onClick={(e) => e.stopPropagation()}
                           className="text-sm font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
                         />
                         <input
@@ -164,6 +318,8 @@ const OrdersSection = ({ permissions = [] }) => {
                           name="phone"
                           value={editFormData.phone}
                           onChange={handleInputChange}
+                          onKeyDown={(e) => handleKeyDown(e, order.id)}
+                          onClick={(e) => e.stopPropagation()}
                           className="text-[11px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
                         />
                       </div>
@@ -174,13 +330,15 @@ const OrdersSection = ({ permissions = [] }) => {
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-5">
+                  <td className="px-6 py-5 hidden md:table-cell">
                     {editingId === order.id ? (
                       <input
                         type="text"
                         name="product"
                         value={editFormData.product}
                         onChange={handleInputChange}
+                        onKeyDown={(e) => handleKeyDown(e, order.id)}
+                        onClick={(e) => e.stopPropagation()}
                         className="text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
                       />
                     ) : (
@@ -194,13 +352,15 @@ const OrdersSection = ({ permissions = [] }) => {
                         name="amount"
                         value={editFormData.amount}
                         onChange={handleInputChange}
+                        onKeyDown={(e) => handleKeyDown(e, order.id)}
+                        onClick={(e) => e.stopPropagation()}
                         className="text-sm font-black text-primary bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
                       />
                     ) : (
                       <span className="text-sm font-black text-primary">{order.amount}</span>
                     )}
                   </td>
-                  <td className="px-6 py-5">
+                  <td className="px-6 py-5 hidden lg:table-cell">
                     {editingId === order.id ? (
                       <div className="flex flex-col gap-1">
                         <SearchableSelect
@@ -242,60 +402,86 @@ const OrdersSection = ({ permissions = [] }) => {
                       </span>
                     )}
                   </td>
+                  <td className="px-6 py-5 hidden xl:table-cell">
+                    {editingId === order.id ? (
+                      <SearchableSelect
+                        options={wilayas.map(w => ({ label: w.fr, value: w.fr }))}
+                        value={editFormData.wilaya}
+                        onChange={(val) => handleInputChange({ target: { name: 'wilaya', value: val } })}
+                        placeholder={t('Wilaya')}
+                        t={t}
+                      />
+                    ) : (
+                      <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{order.wilaya || '-'}</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-5 hidden xl:table-cell">
+                    {editingId === order.id ? (
+                      <input
+                        type="text"
+                        name="commune"
+                        value={editFormData.commune}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleKeyDown(e, order.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        placeholder={t('Commune')}
+                        className="text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                      />
+                    ) : (
+                      <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{order.commune || '-'}</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-5 hidden lg:table-cell">
+                    {editingId === order.id ? (
+                      <SearchableSelect
+                        options={[
+                          { label: 'Yalidine', value: 'Yalidine' },
+                          { label: 'ZR Express', value: 'ZR Express' },
+                          { label: 'DHD', value: 'DHD' },
+                        ]}
+                        value={editFormData.deliveryCompany}
+                        onChange={(val) => handleInputChange({ target: { name: 'deliveryCompany', value: val } })}
+                        placeholder={t('Livreur')}
+                        t={t}
+                      />
+                    ) : (
+                      <span className="text-sm font-bold text-slate-600 dark:text-slate-300">{order.deliveryCompany || '-'}</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-5 hidden lg:table-cell">
+                    {editingId === order.id ? (
+                      <input
+                        type="text"
+                        name="deliveryPrice"
+                        value={editFormData.deliveryPrice}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleKeyDown(e, order.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        placeholder={t('Prix')}
+                        className="text-sm font-black text-amber-500 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                      />
+                    ) : (
+                      <span className="text-sm font-black text-amber-500">{order.deliveryPrice || '-'}</span>
+                    )}
+                  </td>
                   <td className="px-6 py-5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      {editingId === order.id ? (
-                        <>
-                          <button
-                            onClick={() => handleSaveClick(order.id)}
-                            title="Sauvegarder"
-                            className="p-2 text-emerald-500 hover:bg-emerald-500/10 rounded-xl transition-all active:scale-90"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={handleCancelClick}
-                            title="Annuler"
-                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all active:scale-90"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          {hasPerm('orders:edit') && (
-                            <button
-                              onClick={() => handleEditClick(order)}
-                              title="Modifier"
-                              className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all active:scale-90"
-                            >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                            </button>
-                          )}
-                          <button title="Détails" className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-90">
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </button>
-                          {hasPerm('orders:delete') && (
-                            <button
-                              onClick={() => handleDeleteClick(order.id)}
-                              title="Supprimer"
-                              className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all active:scale-90"
-                            >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
-                          )}
-                        </>
+                      <button title="Détails" className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-90">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </button>
+                      {hasPerm('orders:delete') && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDeleteClick(order.id); }}
+                          title="Supprimer"
+                          className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all active:scale-90"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
                       )}
                     </div>
                   </td>

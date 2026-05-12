@@ -94,4 +94,12 @@ export const clientServices = {
     });
     return await handleResponse(response);
   },
+
+  getWilayas: async () => {
+    const response = await fetch(`${BASE_URL}/catalogs/wilayas`, {
+      method: 'GET',
+      headers: getHeaders(true),
+    });
+    return await handleResponse(response);
+  },
 };

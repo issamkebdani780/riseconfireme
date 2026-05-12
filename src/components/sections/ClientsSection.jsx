@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { clientServices } from '../../services/clientServices';
+import SearchableSelect from '../common/SearchableSelect';
 
 const ClientsSection = ({ permissions = [] }) => {
   const { t } = useTranslation();
@@ -7,13 +9,86 @@ const ClientsSection = ({ permissions = [] }) => {
 
   const hasPerm = (p) => permissions.includes(p);
 
-  const clients = [
-    { id: 1, name: 'Ahmed Mansouri', email: 'ahmed.m@email.dz', phone: '+213 551 23 45 67', location: 'Alger, DZ', orders: 12, totalSpent: '54,000 DA', lastOrder: 'Il y a 2 jours' },
-    { id: 2, name: 'Sara El Amrani', email: 'sara.a@email.dz', phone: '+213 552 88 99 00', location: 'Oran, DZ', orders: 5, totalSpent: '28,900 DA', lastOrder: 'Aujourd\'hui' },
-    { id: 3, name: 'Yassine Benjelloun', email: 'yassine.b@email.dz', phone: '+213 553 11 22 33', location: 'Constantine, DZ', orders: 24, totalSpent: '122,000 DA', lastOrder: 'Il y a 1 semaine' },
-    { id: 4, name: 'Khadija Alami', email: 'khadija.al@email.dz', phone: '+213 554 44 55 66', location: 'Annaba, DZ', orders: 3, totalSpent: '13,200 DA', lastOrder: 'Hier' },
-    { id: 5, name: 'Omar Tazi', email: 'omar.t@email.dz', phone: '+213 555 77 88 99', location: 'Sétif, DZ', orders: 8, totalSpent: '45,600 DA', lastOrder: 'Il y a 3 jours' },
-  ];
+  const [wilayas, setWilayas] = useState([]);
+  const [loadingWilayas, setLoadingWilayas] = useState(false);
+
+  useEffect(() => {
+    const fetchWilayas = async () => {
+      try {
+        setLoadingWilayas(true);
+        const data = await clientServices.getWilayas();
+        setWilayas(data);
+      } catch (error) {
+        console.error('Failed to fetch wilayas:', error);
+      } finally {
+        setLoadingWilayas(false);
+      }
+    };
+    fetchWilayas();
+  }, []);
+
+  const [clients, setClients] = useState([
+    { id: 1, name: 'Ahmed Mansouri', email: 'ahmed.m@email.dz', phone: '+213 551 23 45 67', wilaya: 'Alger', commune: 'Sidi M\'Hamed', orders: 12, totalSpent: '54,000 DA', lastOrder: 'Il y a 2 jours' },
+    { id: 2, name: 'Sara El Amrani', email: 'sara.a@email.dz', phone: '+213 552 88 99 00', wilaya: 'Oran', commune: 'Bir El Djir', orders: 5, totalSpent: '28,900 DA', lastOrder: 'Aujourd\'hui' },
+    { id: 3, name: 'Yassine Benjelloun', email: 'yassine.b@email.dz', phone: '+213 553 11 22 33', wilaya: 'Constantine', commune: 'Khroub', orders: 24, totalSpent: '122,000 DA', lastOrder: 'Il y a 1 semaine' },
+    { id: 4, name: 'Khadija Alami', email: 'khadija.al@email.dz', phone: '+213 554 44 55 66', wilaya: 'Annaba', commune: 'El Bouni', orders: 3, totalSpent: '13,200 DA', lastOrder: 'Hier' },
+    { id: 5, name: 'Omar Tazi', email: 'omar.t@email.dz', phone: '+213 555 77 88 99', wilaya: 'Sétif', commune: 'El Eulma', orders: 8, totalSpent: '45,600 DA', lastOrder: 'Il y a 3 jours' },
+  ]);
+
+  const [editingId, setEditingId] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+
+  const handleEditClick = (client) => {
+    setEditingId(client.id);
+    setEditFormData({ ...client });
+  };
+
+  const handleSaveClick = (id, updatedData = editFormData) => {
+    setClients(prev => prev.map(c => c.id === id ? updatedData : c));
+    setEditingId(null);
+    setEditFormData({});
+  };
+
+  const handleDeleteClient = (id) => {
+    if (window.confirm(t('Êtes-vous sûr de vouloir supprimer ce client ?'))) {
+      setClients(prev => prev.filter(c => c.id !== id));
+      if (editingId === id) setEditingId(null);
+    }
+  };
+
+  const handleAddClient = () => {
+    const newClient = {
+      id: Math.max(0, ...clients.map(c => c.id)) + 1,
+      name: '',
+      email: '',
+      phone: '',
+      wilaya: '',
+      commune: '',
+      orders: 0,
+      totalSpent: '0 DA',
+      lastOrder: 'N/A'
+    };
+    setClients([newClient, ...clients]);
+    setEditingId(newClient.id);
+    setEditFormData({ ...newClient });
+  };
+
+  const handleBlur = (id) => {
+    handleSaveClick(id);
+  };
+
+  const handleKeyDown = (e, id) => {
+    if (e.key === 'Enter') {
+      handleSaveClick(id);
+    } else if (e.key === 'Escape') {
+      setEditingId(null);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const filteredClients = clients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -23,9 +98,8 @@ const ClientsSection = ({ permissions = [] }) => {
 
   return (
     <div className="space-y-6">
-      {/* Search & Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm flex items-center gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="relative flex-1">
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -39,31 +113,34 @@ const ClientsSection = ({ permissions = [] }) => {
             />
           </div>
           {hasPerm('clients:create') && (
-            <button className="px-6 py-3 bg-primary text-white text-sm font-black rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all active:scale-95 whitespace-nowrap">
+            <button 
+              onClick={handleAddClient}
+              className="w-full sm:w-auto px-6 py-3 bg-primary text-white text-sm font-black rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all active:scale-95 whitespace-nowrap"
+            >
               {t('Ajouter Client')}
             </button>
           )}
         </div>
         
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Clients</p>
             <h4 className="text-xl font-black text-heading dark:text-white">4,829</h4>
           </div>
-          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-primary">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-primary shrink-0">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Nouveaux ce mois</p>
             <h4 className="text-xl font-black text-heading dark:text-white">+156</h4>
           </div>
-          <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center text-emerald-500">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center text-emerald-500 shrink-0">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
           </div>
@@ -78,40 +155,104 @@ const ClientsSection = ({ permissions = [] }) => {
               <tr className="bg-slate-50/50 dark:bg-slate-800/50">
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Client')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Contact')}</th>
-                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Localisation')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden lg:table-cell">{t('Wilaya')}</th>
+                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 hidden lg:table-cell">{t('Commune')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 text-center">{t('Commandes')}</th>
                 <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800">{t('Valeur Totale')}</th>
-                <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-800 text-right">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
               {filteredClients.map((client) => (
-                <tr key={client.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <tr 
+                  key={client.id} 
+                  onClick={() => editingId !== client.id && handleEditClick(client)}
+                  className={`group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer ${editingId === client.id ? 'bg-slate-50/50 dark:bg-slate-800/30' : ''}`}
+                >
                   <td className="px-6 py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-black text-primary text-xs border border-slate-200 dark:border-slate-700">
-                        {client.name.split(' ').map(n => n[0]).join('')}
+                    {editingId === client.id ? (
+                      <input
+                        type="text"
+                        name="name"
+                        autoFocus
+                        value={editFormData.name}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleKeyDown(e, client.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-sm font-black bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-black text-primary text-xs border border-slate-200 dark:border-slate-700">
+                          {client.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-black text-heading dark:text-white">{client.name}</span>
+                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Client VIP</span>
+                        </div>
                       </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-5">
+                    {editingId === client.id ? (
+                      <div className="flex flex-col gap-1">
+                        <input
+                          type="text"
+                          name="email"
+                          value={editFormData.email}
+                          onChange={handleInputChange}
+                          onKeyDown={(e) => handleKeyDown(e, client.id)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-sm text-slate-600 dark:text-slate-300 font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                        />
+                        <input
+                          type="text"
+                          name="phone"
+                          value={editFormData.phone}
+                          onChange={handleInputChange}
+                          onKeyDown={(e) => handleKeyDown(e, client.id)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[11px] text-slate-400 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                        />
+                      </div>
+                    ) : (
                       <div className="flex flex-col">
-                        <span className="text-sm font-black text-heading dark:text-white">{client.name}</span>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Client VIP</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300 font-medium hidden sm:block">{client.email}</span>
+                        <span className="text-[11px] text-slate-400">{client.phone}</span>
                       </div>
-                    </div>
+                    )}
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="flex flex-col">
-                      <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">{client.email}</span>
-                      <span className="text-[11px] text-slate-400">{client.phone}</span>
-                    </div>
+                  <td className="px-6 py-5 hidden lg:table-cell">
+                    {editingId === client.id ? (
+                      <SearchableSelect
+                        options={wilayas.map(w => ({ label: w.fr, value: w.fr }))}
+                        value={editFormData.wilaya}
+                        onChange={(val) => handleInputChange({ target: { name: 'wilaya', value: val } })}
+                        placeholder={t('Wilaya')}
+                        t={t}
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 font-medium">
+                        {client.wilaya}
+                      </div>
+                    )}
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                      <svg className="w-4 h-4 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {client.location}
-                    </div>
+                  <td className="px-6 py-5 hidden lg:table-cell">
+                    {editingId === client.id ? (
+                      <input
+                        type="text"
+                        name="commune"
+                        value={editFormData.commune}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => handleKeyDown(e, client.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        placeholder={t('Commune')}
+                        className="text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary w-full"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 font-medium">
+                        {client.commune}
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-5 text-center">
                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 text-sm font-black text-heading dark:text-white border border-slate-100 dark:border-slate-800">
@@ -119,24 +260,24 @@ const ClientsSection = ({ permissions = [] }) => {
                     </span>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="text-sm font-black text-emerald-500">{client.totalSpent}</span>
-                    <p className="text-[10px] text-slate-400 font-medium">{client.lastOrder}</p>
-                  </td>
-                  <td className="px-6 py-5 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {hasPerm('clients:edit') && (
-                        <button className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    {editingId === client.id ? (
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleDeleteClient(client.id); }}
+                          className="p-2 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
+                          title={t('Supprimer')}
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
-                      )}
-                      <button className="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-xl transition-all">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                      </button>
-                    </div>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="text-sm font-black text-emerald-500">{client.totalSpent}</span>
+                        <p className="text-[10px] text-slate-400 font-medium">{client.lastOrder}</p>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

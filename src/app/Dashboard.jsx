@@ -79,8 +79,8 @@ const Dashboard = () => {
 
   const navItems = [
     { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon />, visible: true },
-    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: hasPerm('orders:view') },
-    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: hasPerm('clients:view') },
+    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: true },
+    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: true },
     { id: 'agents', label: t('Agents'), icon: <AgentsIcon />, visible: hasPerm('agents:view') },
     { id: 'statistics', label: t('Statistiques'), icon: <StatsIcon />, visible: hasPerm('statistics:view') },
   ].filter(item => item.visible);
@@ -107,12 +107,20 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="h-screen bg-slate-50 dark:bg-slate-950 font-outfit flex transition-colors duration-500 overflow-hidden">
+    <div className="h-screen bg-slate-50 dark:bg-slate-950 font-outfit flex transition-colors duration-500 overflow-hidden relative">
+      {/* Sidebar Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[55] lg:hidden transition-opacity duration-300"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside 
         className={`${
-          isSidebarOpen ? 'w-72' : 'w-20'
-        } bg-white dark:bg-slate-900 border-e border-slate-200 dark:border-slate-800 transition-all duration-300 flex flex-col z-50 h-full sticky top-0`}
+          isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0 w-72 lg:w-20'
+        } fixed lg:static inset-y-0 left-0 bg-white dark:bg-slate-900 border-e border-slate-200 dark:border-slate-800 transition-all duration-300 flex flex-col z-[60] h-full shadow-2xl lg:shadow-none`}
       >
         <div className="p-6 flex items-center justify-between shrink-0">
           <Link to="/">
@@ -136,7 +144,10 @@ const Dashboard = () => {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveSection(item.id)}
+              onClick={() => {
+                setActiveSection(item.id);
+                if (window.innerWidth < 1024) setIsSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${
                 activeSection === item.id 
                   ? 'bg-primary text-white shadow-lg shadow-primary/20' 
@@ -146,8 +157,8 @@ const Dashboard = () => {
               <div className={`${activeSection === item.id ? 'text-white' : 'text-slate-400 group-hover:text-primary'} transition-colors shrink-0`}>
                 {item.icon}
               </div>
-              {isSidebarOpen && <span className="font-bold text-sm truncate">{item.label}</span>}
-              {activeSection === item.id && isSidebarOpen && (
+              {(isSidebarOpen || window.innerWidth < 1024) && <span className="font-bold text-sm truncate">{item.label}</span>}
+              {activeSection === item.id && (isSidebarOpen || window.innerWidth < 1024) && (
                 <div className="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
               )}
             </button>
@@ -160,7 +171,7 @@ const Dashboard = () => {
             className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all font-bold text-sm"
           >
             <div className="shrink-0"><LogoutIcon /></div>
-            {isSidebarOpen && <span className="truncate">{t('Déconnexion')}</span>}
+            {isSidebarOpen || window.innerWidth < 1024 ? <span className="truncate">{t('Déconnexion')}</span> : null}
           </button>
         </div>
       </aside>
@@ -168,17 +179,27 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header */}
-        <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between shrink-0 z-40">
-          <div className="truncate pr-4">
-            <h1 className="text-xl font-black text-heading dark:text-white truncate">
-              {navItems.find(i => i.id === activeSection)?.label}
-            </h1>
-            <p className="text-xs text-slate-400 font-medium truncate">Bienvenue sur RiseConfirm</p>
+        <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-8 flex items-center justify-between shrink-0 z-40 gap-4">
+          <div className="flex items-center gap-4 truncate">
+            <button 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 lg:hidden hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
+            <div className="truncate">
+              <h1 className="text-lg sm:text-xl font-black text-heading dark:text-white truncate">
+                {navItems.find(i => i.id === activeSection)?.label}
+              </h1>
+              <p className="text-[10px] sm:text-xs text-slate-400 font-medium truncate">RiseConfirm</p>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-6 shrink-0">
-            {/* Language Switcher */}
-            <div className="flex items-center bg-slate-50 dark:bg-slate-800/50 p-1 rounded-xl border border-slate-100 dark:border-slate-800">
+            {/* Language Switcher - Hide on very small screens */}
+            <div className="hidden sm:flex items-center bg-slate-50 dark:bg-slate-800/50 p-1 rounded-xl border border-slate-100 dark:border-slate-800">
               {languages.map((lang) => (
                 <button
                   key={lang.code}
@@ -206,8 +227,8 @@ const Dashboard = () => {
               )}
             </button>
 
-            {/* Notifications */}
-            <button className="relative p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-800 text-slate-400 hover:text-primary transition-all group">
+            {/* Notifications - Hide on small screens */}
+            <button className="hidden sm:block relative p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-800 text-slate-400 hover:text-primary transition-all group">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
@@ -242,8 +263,8 @@ const Dashboard = () => {
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar scroll-smooth">
-          <div className="max-w-7xl mx-auto space-y-8 animate-slide-up pb-12">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar scroll-smooth">
+          <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-slide-up pb-12">
             {activeSection === 'dashboard' && <DashboardOverview permissions={permissions} />}
             {activeSection === 'orders' && <OrdersSection permissions={permissions} />}
             {activeSection === 'clients' && <ClientsSection permissions={permissions} />}
