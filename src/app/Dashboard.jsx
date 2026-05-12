@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import Logo from '../components/ui/Logo';
 import { getUser, clearAuthData, getPermissions, setPermissions } from '../utils/auth';
 import { clientServices } from '../services/clientServices';
@@ -17,12 +17,16 @@ import SectionPlaceholder from '../components/sections/SectionPlaceholder';
 const Dashboard = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [user, setUser] = useState(null);
   const [permissions, setPermissionsState] = useState(getPermissions());
   const [notifications, setNotifications] = useState(3);
   const fetchStarted = useRef(false);
+
+  // Derive the active section from the current URL path
+  const pathSegment = location.pathname.split('/dashboard/')[1] || '';
+  const activeSection = pathSegment || 'dashboard';
   
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -78,9 +82,9 @@ const Dashboard = () => {
   const hasPerm = (p) => permissions.includes(p);
 
   const navItems = [
-    { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon />, visible: true },
-    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: true },
-    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: true },
+    { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon />, visible: hasPerm('dashboard:view') },
+    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: hasPerm('orders:view') },
+    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: hasPerm('clients:view') },
     { id: 'agents', label: t('Agents'), icon: <AgentsIcon />, visible: hasPerm('agents:view') },
     { id: 'statistics', label: t('Statistiques'), icon: <StatsIcon />, visible: hasPerm('statistics:view') },
   ].filter(item => item.visible);
@@ -141,28 +145,40 @@ const Dashboard = () => {
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar shrink-0">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveSection(item.id);
-                if (window.innerWidth < 1024) setIsSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${
-                activeSection === item.id 
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-white'
-              }`}
-            >
-              <div className={`${activeSection === item.id ? 'text-white' : 'text-slate-400 group-hover:text-primary'} transition-colors shrink-0`}>
-                {item.icon}
-              </div>
-              {(isSidebarOpen || window.innerWidth < 1024) && <span className="font-bold text-sm truncate">{item.label}</span>}
-              {activeSection === item.id && (isSidebarOpen || window.innerWidth < 1024) && (
-                <div className="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
-              )}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const to = item.id === 'dashboard' ? '/dashboard' : `/dashboard/${item.id}`;
+            return (
+              <NavLink
+                key={item.id}
+                to={to}
+                end={item.id === 'dashboard'}
+                onClick={() => {
+                  if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                }}
+                className={({ isActive }) =>
+                  `w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${
+                    isActive
+                      ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                      : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-white'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-primary'} transition-colors shrink-0`}>
+                      {item.icon}
+                    </div>
+                    {(isSidebarOpen || window.innerWidth < 1024) && (
+                      <span className="font-bold text-sm truncate">{item.label}</span>
+                    )}
+                    {isActive && (isSidebarOpen || window.innerWidth < 1024) && (
+                      <div className="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div className="p-4 border-t border-slate-100 dark:border-slate-800 shrink-0">
@@ -265,11 +281,14 @@ const Dashboard = () => {
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar scroll-smooth">
           <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-slide-up pb-12">
-            {activeSection === 'dashboard' && <DashboardOverview permissions={permissions} />}
-            {activeSection === 'orders' && <OrdersSection permissions={permissions} />}
-            {activeSection === 'clients' && <ClientsSection permissions={permissions} />}
-            {activeSection === 'agents' && <AgentsSection permissions={permissions} />}
-            {activeSection === 'statistics' && <StatisticsSection permissions={permissions} />}
+            <Routes>
+              <Route index element={<DashboardOverview permissions={permissions} />} />
+              <Route path="orders" element={<OrdersSection permissions={permissions} />} />
+              <Route path="clients" element={<ClientsSection permissions={permissions} />} />
+              <Route path="agents" element={<AgentsSection permissions={permissions} />} />
+              <Route path="statistics" element={<StatisticsSection permissions={permissions} />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
           </div>
         </div>
       </main>
