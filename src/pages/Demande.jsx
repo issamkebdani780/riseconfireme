@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import DemandeDeDemonstration from '../components/sections/Demande_de_demonstration';
+import DemandeDeDemonstration from '../components/sections/landing/Demande_de_demonstration';
 
 const Demande = () => {
   return (

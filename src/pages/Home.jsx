@@ -1,19 +1,19 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import Hero from '../components/sections/Hero';
-import Problem from '../components/sections/Problem';
-import Preuve from '../components/sections/Preuve';
-import Temoignages from '../components/sections/Temoignages';
-import Features from '../components/sections/Fonctionnalites';
-import CommentCaMarche from '../components/sections/Comment_ca_marche';
-import Integrations from '../components/sections/Integrations';
-import Pricing from '../components/sections/prix';
-import APropos from '../components/sections/A_propos';
-import Blog from '../components/sections/Blog';
-import FAQ from '../components/sections/FAQ';
-import Contact from '../components/sections/Contact';
-import FinalCTA from '../components/sections/cta';
+import Hero from '../components/sections/landing/Hero';
+import Problem from '../components/sections/landing/Problem';
+import Preuve from '../components/sections/landing/Preuve';
+import Temoignages from '../components/sections/landing/Temoignages';
+import Features from '../components/sections/landing/Fonctionnalites';
+import CommentCaMarche from '../components/sections/landing/Comment_ca_marche';
+import Integrations from '../components/sections/landing/Integrations';
+import Pricing from '../components/sections/landing/prix';
+import APropos from '../components/sections/landing/A_propos';
+import Blog from '../components/sections/landing/Blog';
+import FAQ from '../components/sections/landing/FAQ';
+import Contact from '../components/sections/landing/Contact';
+import FinalCTA from '../components/sections/landing/cta';
 
 const Home = () => {
   return (

@@ -9,7 +9,7 @@ import Legals from './components/policy/legals';
 import Confidenialities from './components/policy/confidenialities';
 import CGV from './components/policy/cgv';
 import ScrollToTop from './components/ui/ScrollToTop';
-import ChatBot from './components/sections/ChatBot';
+import ChatBot from './components/sections/landing/ChatBot';
 import SignIn from './components/auth/signin';
 import SignUp from './components/auth/signup';
 import Dashboard from './app/Dashboard';

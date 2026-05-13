@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import Blog from '../components/sections/Blog';
+import Blog from '../components/sections/landing/Blog';
 
 const BlogPage = () => {
   return (

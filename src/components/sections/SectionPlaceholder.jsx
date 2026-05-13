@@ -1,5 +1,5 @@
 import React from 'react';
-import MapUI from './mapui';
+import MapUI from './statistics/mapui';
 
 const SectionPlaceholder = ({ title }) => {
   const isGeographicSection = title === 'Distribution Géographique' || title === 'Geographic Distribution';

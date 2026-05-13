@@ -1,6 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Logo from '../ui/Logo';
+import Logo from '../../ui/Logo';
 
 const Features = () => {
     const { t } = useTranslation();

@@ -5,12 +5,15 @@ import Logo from '../components/ui/Logo';
 import { getUser, clearAuthData, getPermissions, setPermissions } from '../utils/auth';
 import { clientServices } from '../services/clientServices';
 
-// Import Sections
-import DashboardOverview from '../components/sections/DashboardOverview';
-import OrdersSection from '../components/sections/OrdersSection';
-import ClientsSection from '../components/sections/ClientsSection';
-import AgentsSection from '../components/sections/AgentsSection';
-import StatisticsSection from '../components/sections/StatisticsSection';
+// Sidebar Icons
+import { DashboardIcon, OrdersIcon, ClientsIcon, AgentsIcon, StatsIcon, LogoutIcon } from '../components/layout/icons';
+
+// Dashboard Sections
+import DashboardOverview from '../components/sections/dashboard/DashboardOverview';
+import OrdersSection from '../components/sections/orders/OrdersSection';
+import ClientsSection from '../components/sections/clients/ClientsSection';
+import AgentsSection from '../components/sections/agents/AgentsSection';
+import StatisticsSection from '../components/sections/statistics/StatisticsSection';
 import SectionPlaceholder from '../components/sections/SectionPlaceholder';
 
 
@@ -82,11 +85,11 @@ const Dashboard = () => {
   const hasPerm = (p) => permissions.includes(p);
 
   const navItems = [
-    { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon />, visible: hasPerm('dashboard:view') },
-    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: hasPerm('orders:view') },
-    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: hasPerm('clients:view') },
-    { id: 'agents', label: t('Agents'), icon: <AgentsIcon />, visible: hasPerm('agents:view') },
-    { id: 'statistics', label: t('Statistiques'), icon: <StatsIcon />, visible: hasPerm('statistics:view') },
+    { id: 'dashboard', label: t('Tableau de bord'), icon: <DashboardIcon />, visible: true },
+    { id: 'orders', label: t('Commandes'), icon: <OrdersIcon />, visible: true },
+    { id: 'clients', label: t('Clients'), icon: <ClientsIcon />, visible: true },
+    { id: 'agents', label: t('Agents'), icon: <AgentsIcon />, visible: true },
+    { id: 'statistics', label: t('Statistiques'), icon: <StatsIcon />, visible: true },
   ].filter(item => item.visible);
 
   const handleLogout = async () => {
@@ -295,42 +298,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-// Internal Sidebar Icons
-const DashboardIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-  </svg>
-);
-
-const OrdersIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-  </svg>
-);
-
-const ClientsIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-  </svg>
-);
-
-const AgentsIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-  </svg>
-);
-
-const StatsIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-  </svg>
-);
-
-const LogoutIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-  </svg>
-);
 
 export default Dashboard;

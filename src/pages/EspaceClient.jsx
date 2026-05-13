@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import Espace_Client from '../components/sections/Espace_Client';
+import Espace_Client from '../components/sections/landing/Espace_Client';
 
 const EspaceClient = () => {
   return (
