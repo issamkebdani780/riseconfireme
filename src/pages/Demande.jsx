@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import DemandeDeDemonstration from '../components/sections/landing/Demande_de_demonstration';
+import DemoSection from '../components/sections/landing/DemoSection';
 
 const Demande = () => {
   return (
@@ -9,7 +9,7 @@ const Demande = () => {
       <Header />
 
       <main>
-        <DemandeDeDemonstration />
+        <DemoSection />
       </main>
 
       <Footer />

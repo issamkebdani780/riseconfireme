@@ -1,6 +1,6 @@
 import { getToken } from '../utils/auth';
 
-export const BASE_URL = 'https://api.rise-confirm.jervi.dev';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.rise-confirm.jervi.dev';
 
 export const handleResponse = async (response) => {
   const data = await response.json();

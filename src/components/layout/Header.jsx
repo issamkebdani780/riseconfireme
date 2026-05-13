@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import DropDown from '../ui/DropDown';
 import Logo from '../ui/Logo';
 import { isAuthenticated } from '../../utils/auth';
+import { useTheme } from '../../hooks/useTheme';
 
 const Header = () => {
   const location = useLocation();
@@ -16,34 +17,15 @@ const Header = () => {
     setIsLoggedIn(isAuthenticated());
   }, [location.pathname]);
 
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      if (saved) return saved;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return 'light';
-  });
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
+  }, []);
 
   const featuresItems = [
     { title: t("Confirmation par appel"), description: t("Agents formés pour vos appels COD"), link: "#features", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg> },
@@ -57,11 +39,11 @@ const Header = () => {
   ];
 
   const ecoItems = [
-    { title: t("RiseManager"), description: t("Gestion e-commerce globale"), icon: <img src="/ecosystem/risemanager.png" alt="RiseManager" className="w-full h-full rounded-xl object-cover bg-white" /> },
-    { title: t("RiseCart"), description: t("Checkout optimisé pour le COD"), icon: <img src="/ecosystem/risecart.jpg" alt="RiseCart" className="w-full h-full rounded-xl object-cover" /> },
-    { title: t("FBR"), description: t("Logistique et stockage"), icon: <img src="/ecosystem/fbr.jpg" alt="FBR" className="w-full h-full rounded-xl object-cover" /> },
-    { title: t("RiseAcademy"), description: t("Formation e-commerce"), icon: <img src="/ecosystem/riseacademy.png" alt="RiseAcademy" className="w-full h-full rounded-xl object-cover" /> },
-    { title: t("RisePay"), description: t("Solutions de paiement"), icon: <img src="/ecosystem/risepay.jpg" alt="RisePay" className="w-full h-full rounded-xl object-cover" /> },
+    { title: t("RiseManager"), description: t("Gestion e-commerce globale"), link: "#ecosystem", icon: <img src="/ecosystem/risemanager.png" alt="RiseManager" className="w-full h-full rounded-xl object-cover bg-white" /> },
+    { title: t("RiseCart"), description: t("Checkout optimisé pour le COD"), link: "#ecosystem", icon: <img src="/ecosystem/risecart.jpg" alt="RiseCart" className="w-full h-full rounded-xl object-cover" /> },
+    { title: t("FBR"), description: t("Logistique et stockage"), link: "#ecosystem", icon: <img src="/ecosystem/fbr.jpg" alt="FBR" className="w-full h-full rounded-xl object-cover" /> },
+    { title: t("RiseAcademy"), description: t("Formation e-commerce"), link: "#ecosystem", icon: <img src="/ecosystem/riseacademy.png" alt="RiseAcademy" className="w-full h-full rounded-xl object-cover" /> },
+    { title: t("RisePay"), description: t("Solutions de paiement"), link: "#ecosystem", icon: <img src="/ecosystem/risepay.jpg" alt="RisePay" className="w-full h-full rounded-xl object-cover" /> },
   ];
 
   const changeLanguage = (lng) => {

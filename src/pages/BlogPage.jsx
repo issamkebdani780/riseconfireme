@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import Blog from '../components/sections/landing/Blog';
+import BlogSection from '../components/sections/landing/BlogSection';
 
 const BlogPage = () => {
   return (
@@ -9,7 +9,7 @@ const BlogPage = () => {
       <Header />
 
       <main>
-        <Blog />
+        <BlogSection />
       </main>
 
       <Footer />

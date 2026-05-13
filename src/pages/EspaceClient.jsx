@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import Espace_Client from '../components/sections/landing/Espace_Client';
+import ClientPortal from '../components/sections/landing/ClientPortal';
 
 const EspaceClient = () => {
   return (
@@ -9,7 +9,7 @@ const EspaceClient = () => {
       <Header />
 
       <main>
-        <Espace_Client />
+        <ClientPortal />
       </main>
 
       <Footer />

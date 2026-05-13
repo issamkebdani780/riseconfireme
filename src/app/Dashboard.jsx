@@ -14,7 +14,9 @@ import OrdersSection from '../components/sections/orders/OrdersSection';
 import ClientsSection from '../components/sections/clients/ClientsSection';
 import AgentsSection from '../components/sections/agents/AgentsSection';
 import StatisticsSection from '../components/sections/statistics/StatisticsSection';
-import SectionPlaceholder from '../components/sections/SectionPlaceholder';
+import { useTheme } from '../hooks/useTheme';
+
+
 
 
 const Dashboard = () => {
@@ -31,14 +33,7 @@ const Dashboard = () => {
   const pathSegment = location.pathname.split('/dashboard/')[1] || '';
   const activeSection = pathSegment || 'dashboard';
   
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      if (saved) return saved;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return 'light';
-  });
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const userData = getUser();
@@ -70,17 +65,6 @@ const Dashboard = () => {
       fetchPermissions();
     }
   }, [navigate, permissions.length]);
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   const hasPerm = (p) => permissions.includes(p);
 

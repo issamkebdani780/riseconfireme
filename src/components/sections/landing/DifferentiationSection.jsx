@@ -49,7 +49,7 @@ const Differentiation = () => {
     ];
 
     return (
-        <section className="py-24 lg:py-32 bg-slate-50/30 dark:bg-slate-900/10 overflow-hidden relative transition-colors duration-500">
+        <section className="py-24 lg:py-32 bg-slate-50/30 dark:bg-slate-900/10 overflow-hidden relative transition-colors duration-500" id="why-us">
             <div className="container mx-auto px-4 sm:px-6 relative z-10">
                 {/* Header */}
                  <div className="max-w-3xl mx-auto text-center mb-20 space-y-6">
